@@ -110,7 +110,8 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs">
+    {{-- NOTE: added items-start here --}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs items-start">
         {{-- LEFT: SETTINGS / UPLOAD / THUMBNAIL --}}
         <div class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-4">
             @if ($isOwner)
