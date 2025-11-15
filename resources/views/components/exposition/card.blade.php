@@ -17,6 +17,7 @@
     }
 
     $curatorHandle = '@' . ($exposition->user?->name ? Str::slug($exposition->user->name, '_') : 'anonymous');
+    $likesCount = $exposition->likes_count ?? ($exposition->relationLoaded('likes') ? $exposition->likes->count() : 0);
 @endphp
 
 <article {{ $attributes->merge(['class' => 'border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3']) }}>
@@ -48,6 +49,13 @@
         </span>
         <span>exhibits: {{ $exposition->exhibits_count }}</span>
         <span>status: {{ $exposition->is_public ? 'public' : 'private' }}</span>
+        <span class="flex items-center gap-1">
+            <span>likes:</span>
+            <span class="text-zinc-300 flex items-center gap-1">
+                {{ $likesCount }}
+                <span class="text-[#facc15] text-xs"><3</span>
+            </span>
+        </span>
     </div>
 
     <div class="flex flex-col gap-2 mt-2">

@@ -48,4 +48,20 @@ class Exposition extends Model
     {
         return $this->hasMany(Exhibit::class)->orderBy('position');
     }
+
+    /**
+     * Get the likes for the exposition.
+     */
+    public function likes()
+    {
+        return $this->hasMany(ExpositionLike::class);
+    }
+
+    /**
+     * Get the comments for the exposition.
+     */
+    public function comments()
+    {
+        return $this->hasMany(ExpositionComment::class);
+    }
 }

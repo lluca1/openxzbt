@@ -114,7 +114,7 @@ class ExpositionsManager extends Component
             })
             ->latest()
             ->with(['user:id,name'])
-            ->withCount('exhibits')
+            ->withCount(['exhibits', 'likes'])
             ->get();
     }
 }

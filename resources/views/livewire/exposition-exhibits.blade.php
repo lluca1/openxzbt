@@ -21,6 +21,95 @@
         </div>
     </div>
 
+    {{-- ENGAGEMENT: LIKES + COMMENTS --}}
+    <div class="border border-zinc-800 bg-[#050608] rounded-none p-5 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-3 text-[11px] text-zinc-400">
+                <button
+                    type="button"
+                    wire:click="toggleLike"
+                    @disabled(! $canInteract)
+                    class="flex items-center gap-2 px-3 py-1.5 border rounded-none text-xs tracking-tight transition {{ $likedByUser ? 'border-[#38bdf8]/70 bg-[#072635] text-[#bae6fd]' : 'border-zinc-700 text-zinc-200 hover:border-zinc-500' }}"
+                >
+                    <span class="text-base">
+                        {{ $likedByUser ? '♥' : '♡' }}
+                    </span>
+                    <span>{{ $likedByUser ? 'liked' : 'like this exposition' }}</span>
+                </button>
+
+                <span class="text-zinc-500">
+                    {{ $likesCount }} {{ \Illuminate\Support\Str::plural('like', $likesCount) }}
+                </span>
+            </div>
+
+            <span class="text-[10px] text-zinc-500">{{ count($comments) }} {{ \Illuminate\Support\Str::plural('comment', count($comments)) }}</span>
+        </div>
+
+        <div class="space-y-3">
+            @if ($canInteract)
+                <form wire:submit.prevent="postComment" class="space-y-2">
+                    <label for="commentBody" class="text-[11px] text-zinc-400 uppercase tracking-wide">
+                        share your thoughts
+                    </label>
+                    <textarea
+                        id="commentBody"
+                        wire:model.defer="commentBody"
+                        class="w-full bg-zinc-900/40 border border-zinc-700 focus:border-zinc-400 outline-none text-[12px] text-zinc-100 rounded-none px-3 py-2"
+                        rows="3"
+                        placeholder="leave a note for this exposition"
+                    ></textarea>
+                    @error('commentBody')
+                        <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                    @enderror
+
+                    <div class="flex items-center justify-end">
+                        <button type="submit" class="px-3 py-1 border border-zinc-600 text-zinc-200 text-[11px] tracking-tight rounded-none hover:bg-zinc-800">
+                            :: POST COMMENT
+                        </button>
+                    </div>
+                </form>
+            @else
+                <div class="bg-zinc-900/30 border border-dashed border-zinc-700 px-3 py-2 text-[11px] text-zinc-400 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <span>sign in to like or comment on this exposition.</span>
+                    <a href="{{ route('login') }}" class="text-[#38bdf8] underline text-[11px]">go to login</a>
+                </div>
+            @endif
+        </div>
+
+        <div class="space-y-3 border-t border-zinc-800 pt-4">
+            @forelse ($comments as $comment)
+                <article class="border border-zinc-700 rounded-none p-3 bg-zinc-900/20" wire:key="comment-{{ $comment['id'] }}">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="text-[11px] text-zinc-300 font-semibold">{{ $comment['user_name'] }}</p>
+                            <p class="text-[10px] text-zinc-500">
+                                {{ $comment['user_handle'] }}
+                                ·
+                                {{ $comment['timestamp'] }}
+                            </p>
+                        </div>
+
+                        @if ($comment['can_delete'])
+                            <button
+                                type="button"
+                                wire:click="deleteComment({{ $comment['id'] }})"
+                                class="text-[10px] text-[#f97373] hover:text-[#fca5a5]"
+                            >
+                                remove
+                            </button>
+                        @endif
+                    </div>
+
+                    <p class="text-[12px] text-zinc-200 mt-2 whitespace-pre-line">{{ $comment['body'] }}</p>
+                </article>
+            @empty
+                <div class="border border-dashed border-zinc-700 px-4 py-6 text-center text-[12px] text-zinc-400 rounded-none">
+                    no comments yet. be the first to share a reaction.
+                </div>
+            @endforelse
+        </div>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs">
         {{-- LEFT: SETTINGS / UPLOAD / THUMBNAIL --}}
         <div class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-4">

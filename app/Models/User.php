@@ -53,4 +53,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Exposition::class);
     }
+
+    /**
+     * Likes the user has made on expositions.
+     */
+    public function expositionLikes()
+    {
+        return $this->hasMany(ExpositionLike::class);
+    }
+
+    /**
+     * Comments the user has posted on expositions.
+     */
+    public function expositionComments()
+    {
+        return $this->hasMany(ExpositionComment::class);
+    }
 }

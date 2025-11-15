@@ -52,7 +52,8 @@ test('navigation menu can be rendered', function () {
 
     $response
         ->assertOk()
-        ->assertSeeVolt('layout.navigation');
+        ->assertSee('[*] HOME', false)
+        ->assertSee('[+] CREATE_EXPOSITION', false);
 });
 
 test('users can logout', function () {

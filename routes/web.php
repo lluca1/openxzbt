@@ -18,6 +18,7 @@ use App\Models\Exposition;
 
 Route::get('/', function () {
     $expositions = Exposition::with('user')
+        ->withCount(['exhibits', 'likes'])
         ->where('is_public', true)
         ->latest()
         ->take(6)

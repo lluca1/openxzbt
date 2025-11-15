@@ -25,6 +25,17 @@ class ExpositionExhibits extends Component
 
     public bool $showThumbnailEditor = false;
 
+    public int $likesCount = 0;
+
+    public bool $likedByUser = false;
+
+    public array $comments = [];
+
+    #[Rule('nullable|string|max:1000')]
+    public string $commentBody = '';
+
+    public bool $canInteract = false;
+
     #[Rule('required|string|max:255')]
     public string $title = '';
 
@@ -47,12 +58,14 @@ class ExpositionExhibits extends Component
     {
         $this->exposition = $exposition;
         $this->isOwner = Auth::id() === $this->exposition->user_id;
+        $this->canInteract = Auth::check();
 
         if (! $this->isOwner && ! $this->exposition->is_public) {
             abort(403);
         }
 
         $this->loadExhibits();
+        $this->loadEngagement();
     }
 
     public function render()
@@ -111,6 +124,66 @@ class ExpositionExhibits extends Component
         $this->exposition->refresh();
     }
 
+    public function toggleLike(): void
+    {
+        if (! $this->canInteract) {
+            return;
+        }
+
+        $userId = Auth::id();
+
+        $existing = $this->exposition->likes()->where('user_id', $userId)->first();
+
+        if ($existing) {
+            $existing->delete();
+        } else {
+            $this->exposition->likes()->create([
+                'user_id' => $userId,
+            ]);
+        }
+
+        $this->loadEngagement();
+    }
+
+    public function postComment(): void
+    {
+        $userId = $this->ensureAuthenticatedUser();
+
+        $this->validate([
+            'commentBody' => 'required|string|min:3|max:1000',
+        ]);
+
+        $this->exposition->comments()->create([
+            'user_id' => $userId,
+            'body' => trim($this->commentBody),
+        ]);
+
+        $this->reset('commentBody');
+        $this->loadEngagement();
+    }
+
+    public function deleteComment(int $commentId): void
+    {
+        $userId = Auth::id();
+
+        if (! $userId) {
+            abort(403);
+        }
+
+        $comment = $this->exposition->comments()->whereKey($commentId)->first();
+
+        if (! $comment) {
+            return;
+        }
+
+        if ($comment->user_id !== $userId && $this->exposition->user_id !== $userId) {
+            abort(403);
+        }
+
+        $comment->delete();
+        $this->loadEngagement();
+    }
+
     public function delete(int $exhibitId): void
     {
         $userId = $this->ensureExpositionOwner();
@@ -156,6 +229,34 @@ class ExpositionExhibits extends Component
         $this->exhibits = $this->exposition->exhibits()->get();
     }
 
+    private function loadEngagement(): void
+    {
+        $userId = Auth::id();
+
+        $this->canInteract = (bool) $userId;
+        $this->likesCount = $this->exposition->likes()->count();
+        $this->likedByUser = $userId ? $this->exposition->likes()->where('user_id', $userId)->exists() : false;
+
+        $comments = $this->exposition->comments()
+            ->with('user:id,name')
+            ->latest()
+            ->limit(25)
+            ->get();
+
+        $this->comments = $comments->map(function ($comment) use ($userId) {
+            $author = $comment->user;
+
+            return [
+                'id' => $comment->id,
+                'body' => $comment->body,
+                'user_name' => $author?->name ?? 'Anonymous curator',
+                'user_handle' => $author && $author->name ? '@'.Str::slug($author->name, '_') : '@anon',
+                'timestamp' => $comment->created_at->diffForHumans(),
+                'can_delete' => $userId && ($comment->user_id === $userId || $this->exposition->user_id === $userId),
+            ];
+        })->toArray();
+    }
+
     public function saveThumbnail(): void
     {
         $userId = $this->ensureExpositionOwner();
@@ -199,6 +300,19 @@ class ExpositionExhibits extends Component
 
         if (! $userId || $this->exposition->user_id !== $userId) {
             abort(403);
+        }
+
+        return $userId;
+    }
+
+    private function ensureAuthenticatedUser(): int
+    {
+        $userId = Auth::id();
+
+        if (! $userId) {
+            throw ValidationException::withMessages([
+                'commentBody' => 'You need to sign in to comment on an exposition.',
+            ]);
         }
 
         return $userId;
