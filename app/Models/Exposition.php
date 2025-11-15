@@ -21,6 +21,7 @@ class Exposition extends Model
         'cover_image_path',
         'is_public',
         'preset_theme',
+        'player_spawn',
     ];
 
     /**
@@ -31,6 +32,7 @@ class Exposition extends Model
     protected $casts = [
         'is_public' => 'boolean',
         'preset_theme' => 'integer',
+        'player_spawn' => 'array',
     ];
 
     /**
@@ -47,6 +49,14 @@ class Exposition extends Model
     public function exhibits()
     {
         return $this->hasMany(Exhibit::class)->orderBy('position');
+    }
+
+    /**
+     * Get the tiles associated with the exposition.
+     */
+    public function tiles()
+    {
+        return $this->hasMany(Tile::class);
     }
 
     /**

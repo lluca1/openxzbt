@@ -26,6 +26,12 @@ class ExhibitFactory extends Factory
             'thumbnail_path' => null,
             'mime_type' => 'model/obj',
             'position' => fake()->numberBetween(0, 10),
+            'layout_position' => [
+                fake()->randomFloat(2, -10, 10),
+                fake()->randomFloat(2, 0, 5),
+                fake()->randomFloat(2, -10, 10),
+            ],
+            'size' => fake()->numberBetween(1, 3),
         ];
     }
 }

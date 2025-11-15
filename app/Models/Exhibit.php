@@ -24,6 +24,8 @@ class Exhibit extends Model
         'thumbnail_path',
         'mime_type',
         'position',
+        'layout_position',
+        'size',
     ];
 
     /**
@@ -33,6 +35,8 @@ class Exhibit extends Model
      */
     protected $casts = [
         'position' => 'integer',
+        'layout_position' => 'array',
+        'size' => 'integer',
     ];
 
     /**
