@@ -12,6 +12,12 @@ Route::put('/expositions/{exposition}/layout', [ExpositionLayoutController::clas
     ->name('api.expositions.layout');
 
 // test route
-Route::get('/expositions/{exposition}/layout', function ($exposition) {
-    return response()->json(['expo_id' => $exposition]);
+Route::get('/expositions/{exposition}/layout', function (\App\Models\Exposition $exposition) {
+    $exposition->load(['tiles', 'exhibits']);
+
+    return response()->json([
+        'exposition' => $exposition,
+        'tiles' => $exposition->tiles,
+        'exhibits' => $exposition->exhibits,
+    ]);
 });
