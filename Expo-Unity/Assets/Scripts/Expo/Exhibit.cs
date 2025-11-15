@@ -1,41 +1,51 @@
 using UnityEngine;
 using System;
 
-public class Exhibit : MonoBehaviour
+public class Exhibit : Interactable
 {
-    [SerializeField] private string exhibitId;
-    [SerializeField] private float desiredModelSize = 3f;
-    [SerializeField] private Vector3 standOffset;
+    [Header("Exhibit Parameters")]
+    [SerializeField] private ExhibitData exhibitData;
+
+    private GameObject exhibitModel;
+    private ExhibitInspector exhibitInspector;
+
+    private void Start()
+    {
+        exhibitInspector = FindFirstObjectByType<ExhibitInspector>();
+    }
 
     private void Setup(GameObject model)
     {
         if (model == null)
         {
-            Debug.LogError($"Setup failed: Model data was null for {exhibitId}");
+            Debug.LogError($"Setup failed: Model data was null for {exhibitData.title}");
             return;
         }
 
-        GameObject instance = Instantiate(model, transform);
+        exhibitModel = Instantiate(model, transform);
         Destroy(model);
 
-        ModelUtility.CenterPivot(instance);
+        ModelUtility.CenterPivot(exhibitModel);
 
-        for (int i = 0; i < instance.transform.childCount; i++)
+        for (int i = 0; i < exhibitModel.transform.childCount; i++)
         {
-            instance.transform.GetChild(i).localPosition = Vector3.zero;
+            exhibitModel.transform.GetChild(i).localPosition = Vector3.zero;
         }
 
-        ModelUtility.ScaleToTargetSize(instance, desiredModelSize);
+        ModelUtility.ScaleToTargetSize(exhibitModel, exhibitData.size);
 
-        instance.transform.localPosition += standOffset;
-
-        Debug.Log($"Exhibit {exhibitId} setup complete.");
+        Debug.Log($"Exhibit {exhibitData.title} setup complete.");
     }
 
-    public void LoadData(string expoId, string exhibitId)
+    public override void Interact()
     {
-        this.exhibitId = exhibitId;
+        base.Interact();
+        exhibitInspector.StartInspect(exhibitModel, exhibitData);
+    }
 
-        GameManager.Instance.ModelLoader.Load(Setup);
+    public void LoadData(ExhibitData exhibitData)
+    {
+        this.exhibitData = exhibitData;
+        GameManager.Instance.DataLoader.LoadModel(exhibitData.media_path, exhibitData.id.ToString(), Setup);
     }
 }

@@ -66,8 +66,7 @@ public class FirstPersonController : MonoBehaviour
 
         defaultYPos = playerCamera.transform.localPosition.y;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        EnableController(true);
     }
 
     private void Start()
@@ -203,5 +202,17 @@ public class FirstPersonController : MonoBehaviour
         }
 
         playerCamera.fieldOfView = targetFOV;
+    }
+
+    public void EnableController(bool value)
+    {
+        CanMove = value;
+        Cursor.lockState = value ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !value;
+    }
+
+    public void EnableCamera(bool value)
+    {
+        playerCamera.enabled = value;
     }
 }

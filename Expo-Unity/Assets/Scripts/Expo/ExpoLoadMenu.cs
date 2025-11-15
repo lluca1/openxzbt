@@ -12,9 +12,14 @@ public class ExpoLoadMenu : MonoBehaviour
         loadButton.onClick.AddListener(OnLoadClick);
     }
 
+    private void OnDisable()
+    {
+        loadButton.onClick.RemoveListener(OnLoadClick);
+    }
+
     private void OnLoadClick()
     {
         string expoId = idField.text;
-        GameManager.Instance.ExpoManager.LoadExpo(expoId);
+        GameManager.Instance.ExpoManager.StartLoadExpo(expoId);
     }
 }

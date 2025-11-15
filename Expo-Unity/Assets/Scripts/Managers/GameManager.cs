@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 
     public ExpoManager ExpoManager { get; private set; }
     public SceneLoader SceneLoader { get; private set; }
-    public ModelLoader ModelLoader { get; private set; }
+    public DataLoader DataLoader { get; private set; }
 
     public static GameManager Instance;
 
@@ -24,6 +24,6 @@ public class GameManager : MonoBehaviour
 
         ExpoManager = GetComponent<ExpoManager>();
         SceneLoader = GetComponent<SceneLoader>();
-        ModelLoader = GetComponent<ModelLoader>();
+        DataLoader = GetComponentInChildren<DataLoader>();
     }
 }
