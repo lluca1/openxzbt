@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ExpositionLayoutController extends Controller
 {
@@ -19,6 +20,11 @@ class ExpositionLayoutController extends Controller
         // if (Auth::id() !== $exposition->user_id) {
         //     abort(403);
         // }
+
+        Log::info('Layout payload received', [
+            'exposition_id' => $exposition->id,
+            'payload' => $request->all(),
+        ]);
 
         $data = $request->validated();
 
