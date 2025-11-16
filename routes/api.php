@@ -8,7 +8,7 @@ Route::get('/expositions/{exposition}', [ExpositionController::class, 'show'])
     ->name('api.expositions.show');
 
 // TODO: restore auth middleware once Unity client can send Sanctum tokens
-Route::put('/expositions/{exposition}/layout', [ExpositionLayoutController::class, 'update'])
+Route::post('/expositions/{exposition}/layout', [ExpositionLayoutController::class, 'update'])
     ->name('api.expositions.layout');
 
 // test route
