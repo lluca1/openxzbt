@@ -143,7 +143,7 @@
                             @endif
                         @endauth
 
-                        {{-- USER AVATAR (default when guest or no avatar) --}}
+                        {{-- AVATAR --}}
                         <div class="h-12 w-12 bg-[#111] flex items-center justify-center overflow-hidden rounded-none">
                             <img
                                 src="{{ asset('assets/img/' . $avatarFile) }}"
