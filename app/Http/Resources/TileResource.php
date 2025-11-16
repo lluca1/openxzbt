@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ExhibitResource extends JsonResource
+class TileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,9 @@ class ExhibitResource extends JsonResource
         return [
             'id' => $this->id,
             'exposition_id' => $this->exposition_id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'media_path' => $this->media_path,
+            'type' => $this->type,
             'position' => $this->position,
-            'size' => $this->size,
+            'rotation' => $this->rotation,
         ];
     }
 }
