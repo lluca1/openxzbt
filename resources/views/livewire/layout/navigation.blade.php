@@ -64,23 +64,40 @@ new class extends Component
                 <!-- Profile Dropdown -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md 
-                                   text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-100 
-                                   focus:outline-none transition">
-                            <span>{{ auth()->user()->name }}</span>
+                            @if(request()->routeIs('profile'))
+                                <button
+                                    style="background-color: #072635 !important; color: #bae6fd !important; border-color: rgba(56,189,248,0.44) !important;"
+                                    class="inline-flex items-center px-3 py-2 border rounded-md text-sm font-medium transition focus:outline-none border-[#38bdf8]/70 bg-[#072635] text-[#bae6fd]">
+                                    <span>{{ auth()->user()->name }}</span>
 
-                            <svg class="ms-2 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 
-                                      111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 
-                                      010-1.414z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
+                                    <svg class="ms-2 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 
+                                              111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 
+                                              010-1.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            @else
+                                <button
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md 
+                                           text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-100 
+                                           focus:outline-none transition">
+                                    <span>{{ auth()->user()->name }}</span>
+
+                                    <svg class="ms-2 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 
+                                              111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 
+                                              010-1.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            @endif
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile')" wire:navigate>
+                        <x-dropdown-link :href="route('profile')" wire:navigate
+                            class="{{ request()->routeIs('profile') ? 'border-[#38bdf8]/70 bg-[#072635] text-[#bae6fd]' : '' }}"
+                            style="{{ request()->routeIs('profile') ? 'background-color: #072635; color: #bae6fd; border-color: rgba(56,189,248,0.44);' : '' }}">
                             Profile
                         </x-dropdown-link>
 
@@ -174,17 +191,17 @@ new class extends Component
                 </div>
             </div>
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                    Profile
-                </x-responsive-nav-link>
-
-                <button wire:click="logout" class="w-full text-start">
-                    <x-responsive-nav-link>
-                        Log out
+                <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link :href="route('profile')" :active="request()->routeIs('profile')" wire:navigate>
+                        Profile
                     </x-responsive-nav-link>
-                </button>
-            </div>
+
+                    <button wire:click="logout" class="w-full text-start">
+                        <x-responsive-nav-link>
+                            Log out
+                        </x-responsive-nav-link>
+                    </button>
+                </div>
 
         </div>
         @endauth
