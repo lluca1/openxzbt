@@ -43,7 +43,7 @@ class ExpositionLayoutRequest extends FormRequest
             'tiles.*.rotation' => ['required', 'array', 'size:3'],
             'tiles.*.rotation.*' => ['numeric'],
 
-            'exhibits' => ['required', 'array'],
+            'exhibits' => ['nullable', 'array'],
             'exhibits.*.position' => ['required', 'array', 'size:3'],
             'exhibits.*.position.*' => ['numeric'],
             'exhibits.*.size' => ['required', 'numeric', 'min:0'],
