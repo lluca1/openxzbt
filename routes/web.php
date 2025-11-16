@@ -21,8 +21,8 @@ Route::get('/', function () {
     $expositions = Exposition::with('user')
         ->withCount(['exhibits', 'likes'])
         ->where('is_public', true)
-        ->latest()
-        ->take(6)
+        ->orderByDesc('likes_count')
+        ->take(9)
         ->get();
 
     return view('home', compact('expositions'));
