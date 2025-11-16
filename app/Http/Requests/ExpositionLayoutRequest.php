@@ -37,6 +37,7 @@ class ExpositionLayoutRequest extends FormRequest
             'tiles' => ['required', 'array'],
             'tiles.*.id' => ['required', 'string', 'max:255'],
             'tiles.*.type' => ['required', 'integer', 'between:0,65535'],
+            'tiles.*.has_exhibit' => ['required', 'boolean'],
             'tiles.*.position' => ['required', 'array', 'size:3'],
             'tiles.*.position.*' => ['numeric'],
             'tiles.*.rotation' => ['required', 'array', 'size:3'],
