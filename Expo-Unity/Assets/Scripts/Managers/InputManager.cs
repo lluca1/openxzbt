@@ -31,6 +31,11 @@ public class InputManager : MonoBehaviour
         Controls.Disable();
     }
 
+    private void OnDestroy()
+    {
+        Controls.Disable();
+    }
+
     public void DisableInput()
     {
         Controls.Disable();

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class ExpoManager : MonoBehaviour
 {
@@ -12,11 +13,13 @@ public class ExpoManager : MonoBehaviour
     [SerializeField] private Exhibit exhibitPrefab;
 
     [SerializeField] private Vector3 playerSpawnOffset;
-    [SerializeField] private Vector3 tileSpawnOffset;
     [SerializeField] private Vector3 exhibitSpawnOffset;
 
     [Header("Debug")]
     [SerializeField] private ExpoData expoData;
+
+    [Header("Runtime Settings")]
+    [SerializeField] private float updateInterval = 5f;
 
     private List<ExpoTile> createdTiles = new();
     private List<Exhibit> createdExhibits = new();
@@ -45,14 +48,47 @@ public class ExpoManager : MonoBehaviour
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        InputManager.Controls.Player.Cancel.performed -= (ctx) => Exit();
+        StopAllCoroutines();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadScene)
     {
         if (scene.buildIndex == SceneLoader.SCENE_INDEX_EXPO)
         {
+            InputManager.Controls.Player.Cancel.performed += (ctx) => Exit();
+
             CreateExpo();
+            StartCoroutine(UpdateExhibitDataPeriodically());
         }
+    }
+
+    private IEnumerator UpdateExhibitDataPeriodically()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(updateInterval);
+            LoadLatestExhibitData();
+        }
+    }
+
+    private void LoadLatestExhibitData()
+    {
+        if (expoData != null)
+        {
+            GameManager.Instance.DataLoader.LoadExpoData(expoData.id.ToString(), ReceiveUpdatedExpoData);
+        }
+    }
+
+    private void ReceiveUpdatedExpoData(ExpoData newExpoData)
+    {
+        this.expoData = newExpoData;
+        UpdateExhibitScalesDynamically();
+    }
+
+    private void PlayAmbientTrack(AudioClip audioClip)
+    {
+        GameManager.Instance.AmbientController.PlayAmbient(audioClip);
     }
 
     private void LoadExpo(ExpoData expoData)
@@ -70,6 +106,12 @@ public class ExpoManager : MonoBehaviour
         {
             Light sun = FindFirstObjectByType<Light>();
             sun.color = presetsData.Presets[presetTheme].sunColor;
+
+            GameManager.Instance.AmbientController.PlayAmbient(presetsData.Presets[presetTheme].ambientTrack);
+        }
+        else
+        {
+            GameManager.Instance.DataLoader.LoadAudio(expoData.ambient_track, PlayAmbientTrack);
         }
 
         foreach (TileData tile in expoData.tiles)
@@ -96,30 +138,37 @@ public class ExpoManager : MonoBehaviour
                     break;
             }
 
+            if (spawnTile == null)
+            {
+                continue;
+            }
+
             ExpoTile newTile = Instantiate(spawnTile, tile.GetPosition(), Quaternion.identity);
 
             newTile.transform.GetChild(0).eulerAngles = tile.GetRotation();
 
             if (presetTheme != -1)
             {
-                newTile.LoadData(tileType, presetsData.Presets[presetTheme], presetTheme, tile.has_exhibit);
+                newTile.LoadData(tileType, tile.has_exhibit, presetsData.Presets[presetTheme], presetTheme);
             }
             else
             {
-                newTile.LoadData(tileType, expoData.id.ToString(), tile.has_exhibit);
+                newTile.LoadData(tileType, tile.has_exhibit, expoData);
             }
 
             createdTiles.Add(newTile);
         }
 
-        // preset layout
-        // Vector3 pos = tileSpawnOffset + new Vector3(0, 0, createdTiles.Count * tilePrefab.GetSize())
-        // ExpoTile tile = Instantiate(tilePrefab, pos, Quaternion.identity);
-
         foreach (ExhibitData exhibitData in expoData.exhibits)
         {
-            Vector3 finalSpawnOffset = exhibitSpawnOffset * exhibitData.size;
-            Vector3 pos = exhibitData.GetPosition() + finalSpawnOffset;
+            float size = exhibitData.size;
+            Vector3 tilePos = exhibitData.GetPosition();
+
+            Vector3 pos = new Vector3(
+                tilePos.x + exhibitSpawnOffset.x,
+                tilePos.y + exhibitSpawnOffset.y,
+                tilePos.z + exhibitSpawnOffset.z
+            );
 
             Exhibit exhibit = Instantiate(exhibitPrefab, pos, Quaternion.identity);
 
@@ -130,6 +179,47 @@ public class ExpoManager : MonoBehaviour
 
         Vector3 spawnPos = expoData.GetSpawnpointPosition();
         Instantiate(playerPrefab, spawnPos + playerSpawnOffset, Quaternion.identity);
+    }
+
+    private void UpdateExhibitScalesDynamically()
+    {
+        if (expoData == null || expoData.exhibits == null || createdExhibits.Count == 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < createdExhibits.Count; i++)
+        {
+            if (i < expoData.exhibits.Count && createdExhibits[i] != null)
+            {
+                Exhibit exhibit = createdExhibits[i];
+                ExhibitData data = expoData.exhibits[i];
+
+                float newScale = data.size;
+
+                // Check if the new size from the database is different from the exhibit's current size data.
+                if (!Mathf.Approximately(exhibit.GetExhibitData().size, newScale))
+                {
+                    // Update the scale using the new public method in the Exhibit class.
+                    exhibit.UpdateScale(newScale);
+
+                    // Recalculate and update the exhibit's position. This is crucial if scaling affects the model's pivot/offset.
+                    Vector3 tilePos = data.GetPosition();
+
+                    Vector3 pos = new Vector3(
+                        tilePos.x + exhibitSpawnOffset.x,
+                        tilePos.y + exhibitSpawnOffset.y,
+                        tilePos.z + exhibitSpawnOffset.z
+                    );
+                    exhibit.transform.position = pos;
+                }
+            }
+        }
+    }
+
+    private void Exit()
+    {
+        GameManager.Instance.SceneLoader.LoadMenu();
     }
 
     public void StartLoadExpo(string id)

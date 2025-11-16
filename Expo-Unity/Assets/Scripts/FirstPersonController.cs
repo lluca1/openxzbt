@@ -73,7 +73,14 @@ public class FirstPersonController : MonoBehaviour
     {
         InputManager.Controls.Player.Jump.performed += (ctx) => pressingJumpKey = true;
         InputManager.Controls.Player.Jump.canceled += (ctx) => pressingJumpKey = false;
-        InputManager.Controls.Player.Zoom.performed += (ctx) => ToggleZoom();
+        //InputManager.Controls.Player.Zoom.performed += (ctx) => ToggleZoom();
+    }
+
+    private void OnDisable()
+    {
+        InputManager.Controls.Player.Jump.performed -= (ctx) => pressingJumpKey = true;
+        InputManager.Controls.Player.Jump.canceled -= (ctx) => pressingJumpKey = false;
+        //InputManager.Controls.Player.Zoom.performed -= (ctx) => ToggleZoom();
     }
 
     private void Update()

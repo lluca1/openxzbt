@@ -240,15 +240,19 @@ public class TilePlacer : MonoBehaviour
                 return;
             }
 
+            // 1. DIRECT CLICK on Exhibit or Spawn
             if (hitObject.CompareTag("PlacedExhibit") || hitObject.CompareTag("PlayerSpawn"))
             {
-                // FIX: Find the underlying tile and reset the flag
                 PlacedTileData tileUnderneath = GetTileAtPosition(hitPosition);
 
-                // Only clear hasExhibit if deleting an exhibit, not a spawn point
-                if (hitObject.CompareTag("PlacedExhibit") && tileUnderneath != null)
+                if (hitObject.CompareTag("PlacedExhibit"))
                 {
-                    tileUnderneath.hasExhibit = 0;
+                    if (tileUnderneath != null)
+                    {
+                        tileUnderneath.hasExhibit = 0;
+                    }
+                    // NEW: Decrement the exhibit count
+                    GameManager.Instance.ExpoLayoutEditor.DecrementExhibitCount();
                 }
 
                 if (hitObject.CompareTag("PlayerSpawn"))
@@ -266,16 +270,44 @@ public class TilePlacer : MonoBehaviour
             }
 
 
+            // 2. CLICK on PlacedTile
             else if (hitObject.CompareTag("PlacedTile"))
             {
                 Vector3 tilePosition = hitObject.transform.position;
 
-                if (IsPositionOccupiedByTopLayer(tilePosition))
+                // Check for and delete the top layer object if present
+                GameObject topLayerObject = FindTopLayerObjectAtPosition(tilePosition);
+
+                if (topLayerObject != null)
                 {
-                    Debug.Log("Cannot delete tile: It has an exhibit or spawn on it. Delete the top-layer object first.");
-                    return;
+                    // A top-layer object exists, so we delete it instead of the tile.
+                    Debug.Log("Tile click detected occupied space. Deleting top layer object instead.");
+
+                    // Re-run the deletion logic for the top-layer object
+                    if (topLayerObject.CompareTag("PlacedExhibit"))
+                    {
+                        PlacedTileData tileUnderneath = GetTileAtPosition(tilePosition);
+                        if (tileUnderneath != null)
+                        {
+                            tileUnderneath.hasExhibit = 0;
+                        }
+                        // NEW: Decrement the exhibit count
+                        GameManager.Instance.ExpoLayoutEditor.DecrementExhibitCount();
+                    }
+                    else if (topLayerObject.CompareTag("PlayerSpawn"))
+                    {
+                        if (topLayerObject == currentSpawnPoint)
+                        {
+                            currentSpawnPoint = null;
+                        }
+                    }
+
+                    Destroy(topLayerObject);
+                    Debug.Log($"Destroyed placed {topLayerObject.tag} at: {topLayerObject.transform.position}");
+                    return; // Top layer object deleted, action complete
                 }
 
+                // If no top-layer object was found, proceed to delete the tile.
                 Destroy(hitObject);
                 Debug.Log($"Destroyed placed Tile at: {hitObject.transform.position}");
                 return;
@@ -306,6 +338,14 @@ public class TilePlacer : MonoBehaviour
         if (exhibitPrefab == null)
         {
             Debug.LogError("Exhibit Prefab is not assigned in the Inspector!");
+            return;
+        }
+
+        // NEW LOGIC: Check if the maximum number of exhibits has been reached
+        var layoutEditor = GameManager.Instance.ExpoLayoutEditor;
+        if (layoutEditor.GetCurrentExhibitCount() >= layoutEditor.GetMaxExhibitCount())
+        {
+            Debug.LogWarning($"Placement failed: You have reached the maximum allowed exhibits ({layoutEditor.GetMaxExhibitCount()}). Delete an existing exhibit to place a new one.");
             return;
         }
 
@@ -369,7 +409,7 @@ public class TilePlacer : MonoBehaviour
 
             if (isPlancingSpawn && currentSpawnPoint != null)
             {
-                PlacedTileData oldTile = GetTileAtPosition(currentSpawnPoint.transform.position);
+                // PlacedTileData oldTile = GetTileAtPosition(currentSpawnPoint.transform.position); 
 
                 Destroy(currentSpawnPoint);
                 Debug.Log("Previous Player Spawn destroyed to place new one.");
@@ -387,6 +427,10 @@ public class TilePlacer : MonoBehaviour
                 {
                     tileUnderneath.hasExhibit = 1;
                 }
+
+                // NEW: Increment the exhibit count in the layout editor
+                GameManager.Instance.ExpoLayoutEditor.IncrementExhibitCount();
+
                 Debug.Log($"Placed Exhibit at: {newObject.transform.position}");
             }
             else if (isPlancingSpawn)
@@ -412,7 +456,7 @@ public class TilePlacer : MonoBehaviour
         }
     }
 
-    // FIX: Helper method to find the tile component underneath a position
+    // Helper method to find the tile component underneath a position
     private PlacedTileData GetTileAtPosition(Vector3 position)
     {
         // Search only at the tile level (Y=0)
@@ -431,6 +475,29 @@ public class TilePlacer : MonoBehaviour
                 if (tileData != null)
                 {
                     return tileData;
+                }
+            }
+        }
+        return null;
+    }
+
+    // NEW HELPER: Finds the exhibit or spawn object located on top of the tile at this position (Y=0).
+    private GameObject FindTopLayerObjectAtPosition(Vector3 position)
+    {
+        // Search only at the tile level (Y=0)
+        Vector3 tilePosition = new Vector3(position.x, 0f, position.z);
+
+        // Use a small sphere overlap to find objects sitting at the same grid coordinate
+        Collider[] hitColliders = Physics.OverlapSphere(tilePosition, gridSize / 4f, deletionMask);
+
+        foreach (Collider col in hitColliders)
+        {
+            if (col.gameObject.CompareTag("PlacedExhibit") || col.gameObject.CompareTag("PlayerSpawn"))
+            {
+                // Ensure we don't return the preview tile itself if it's placed here
+                if (col.gameObject != previewTile)
+                {
+                    return col.gameObject;
                 }
             }
         }
@@ -543,5 +610,10 @@ public class TilePlacer : MonoBehaviour
     public void Save()
     {
         GameManager.Instance.ExpoLayoutEditor.SaveLayout();
+    }
+
+    public void Exit()
+    {
+        GameManager.Instance.SceneLoader.LoadMenu();
     }
 }

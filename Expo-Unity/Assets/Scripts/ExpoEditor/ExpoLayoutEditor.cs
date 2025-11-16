@@ -9,6 +9,10 @@ public class ExpoLayoutEditor : MonoBehaviour
     private ExpoData expoData;
     private TilePlacer tilePlacer;
 
+    // NEW FIELDS for Exhibit Placement Limit
+    private int maxExhibitCount = 0;
+    private int currentExhibitCount = 0;
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -34,6 +38,18 @@ public class ExpoLayoutEditor : MonoBehaviour
     {
         this.expoData = expoData;
 
+        // NEW: Set the maximum number of exhibits based on the loaded data
+        // This assumes expoData.exhibits contains the list of ALL available exhibits for the expo.
+        if (this.expoData != null && this.expoData.exhibits != null)
+        {
+            maxExhibitCount = this.expoData.exhibits.Count;
+            Debug.Log($"Max available exhibits for this expo: {maxExhibitCount}");
+        }
+        else
+        {
+            maxExhibitCount = 0;
+        }
+
         GameManager.Instance.SceneLoader.LoadLayoutEditor();
     }
 
@@ -46,6 +62,9 @@ public class ExpoLayoutEditor : MonoBehaviour
             Debug.LogError("TilePlacer not found! Cannot create layout.");
             return;
         }
+
+        // NEW: Reset current count before loading
+        currentExhibitCount = 0;
 
         // 1. Load Tiles
         foreach (TileData tile in expoData.tiles)
@@ -69,13 +88,22 @@ public class ExpoLayoutEditor : MonoBehaviour
         foreach (ExhibitData exhibitData in expoData.exhibits)
         {
             GameObject exhibitPrefab = tilePlacer.GetExhibitPrefab();
+            // Assuming exhibitData.GetPosition() provides the coordinates if the exhibit is placed
             Vector3 pos = exhibitData.GetPosition() + new Vector3(0, 2, 0);
 
             GameObject newExhibit = Instantiate(exhibitPrefab, pos, Quaternion.identity);
             newExhibit.tag = "PlacedExhibit";
 
+            // NEW: Increment the count of currently placed exhibits
+            // This relies on the assumption that every entry in expoData.exhibits 
+            // that is loaded here is a successfully placed exhibit.
+            currentExhibitCount++;
+
             Debug.Log($"Loaded Exhibit at {pos}");
         }
+
+        Debug.Log($"Layout created. Current Placed Exhibits: {currentExhibitCount}/{maxExhibitCount}");
+
 
         // 3. Load Player Spawn
         GameObject spawnPrefab = tilePlacer.GetPlayerSpawnPrefab();
@@ -128,15 +156,25 @@ public class ExpoLayoutEditor : MonoBehaviour
 
         List<ExhibitLayoutSaveData> exhibitPayload = new List<ExhibitLayoutSaveData>();
 
-        foreach (GameObject exhibitObject in placedExhibits)
+        // We iterate through the placed exhibits in the scene and map them to 
+        // the available exhibit IDs from the expoData list.
+        for (int i = 0; i < placedExhibits.Length; i++)
         {
-            Vector3 pos = exhibitObject.transform.position;
+            // Safety check: The number of placed objects should not exceed the number of available exhibit IDs.
+            if (i >= expoData.exhibits.Count)
+            {
+                Debug.LogError($"Error during SaveLayout: Placed exhibit count ({placedExhibits.Length}) exceeds available exhibit data ({expoData.exhibits.Count}). Aborting payload creation for remaining exhibits.");
+                break;
+            }
+
+            Vector3 pos = placedExhibits[i].transform.position;
 
             ExhibitLayoutSaveData exhibitData = new ExhibitLayoutSaveData
             {
-                id = exhibitPayload.Count.ToString(),
+                // This assumes the order of placed exhibits matches the order of the exhibit list in expoData
+                id = expoData.exhibits[i].id.ToString(),
                 position = new float[] { pos.x, 0, pos.z },
-                size = 1 // Assuming size 1 if no specific component exists
+                size = expoData.exhibits[i].size,
             };
             exhibitPayload.Add(exhibitData);
         }
@@ -174,5 +212,39 @@ public class ExpoLayoutEditor : MonoBehaviour
         {
             Debug.LogError($"Layout save failed: {error}");
         }
+    }
+
+    /// <summary>
+    /// Returns the maximum number of exhibits allowed for this exposition.
+    /// </summary>
+    public int GetMaxExhibitCount()
+    {
+        return maxExhibitCount;
+    }
+
+    /// <summary>
+    /// Returns the current number of exhibits placed in the scene.
+    /// </summary>
+    public int GetCurrentExhibitCount()
+    {
+        return currentExhibitCount;
+    }
+
+    /// <summary>
+    /// Increments the count of currently placed exhibits.
+    /// Called by TilePlacer upon successful placement.
+    /// </summary>
+    public void IncrementExhibitCount()
+    {
+        currentExhibitCount++;
+    }
+
+    /// <summary>
+    /// Decrements the count of currently placed exhibits.
+    /// Called by TilePlacer upon successful deletion.
+    /// </summary>
+    public void DecrementExhibitCount()
+    {
+        currentExhibitCount = Mathf.Max(0, currentExhibitCount - 1);
     }
 }

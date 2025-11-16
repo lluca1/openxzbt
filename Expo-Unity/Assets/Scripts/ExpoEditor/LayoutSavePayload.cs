@@ -25,5 +25,5 @@ public class ExhibitLayoutSaveData
 {
     public string id;
     public float[] position;
-    public int size;
+    public float size;
 }

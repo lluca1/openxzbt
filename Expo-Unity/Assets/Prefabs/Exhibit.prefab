@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 9083846159053766757}
   - component: {fileID: 6751799117785933769}
   - component: {fileID: 1652461098090984269}
-  - component: {fileID: 5802443184136412643}
   - component: {fileID: 3467540078235444993}
+  - component: {fileID: 6138578589340852637}
   m_Layer: 6
   m_Name: Exhibit
   m_TagString: Untagged
@@ -91,27 +91,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5802443184136412643
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8905528852700047513}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 10, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3467540078235444993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +111,32 @@ MonoBehaviour:
   hideObjectOnInteract: 0
   ableToInteractMessage: 
   unableToInteractMessage: 
-  exhibitId: 
-  desiredModelSize: 8
-  standOffset: {x: 0, y: 5, z: 0}
+  exhibitData:
+    id: 0
+    exposition_id: 0
+    title: 
+    description: 
+    media_path: 
+    position: []
+    size: 0
+--- !u!65 &6138578589340852637
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8905528852700047513}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 5.71, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

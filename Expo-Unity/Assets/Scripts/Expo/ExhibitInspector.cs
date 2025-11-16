@@ -95,7 +95,7 @@ public class ExhibitInspector : MonoBehaviour
         player.EnableCamera(false);
         inspectCamera.enabled = true;
 
-        Vector3 finalSpawnOffset = modelSpawnOffset * exhibitData.size;
+        Vector3 finalSpawnOffset = new Vector3(modelSpawnOffset.x, modelSpawnOffset.y, modelSpawnOffset.z * exhibitData.size);
         modelInstance = Instantiate(model, inspectCamera.transform.position + finalSpawnOffset, Quaternion.identity);
 
         modelInteractable = model.transform.parent.GetComponent<Exhibit>();

@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public SceneLoader SceneLoader { get; private set; }
     public DataLoader DataLoader { get; private set; }
     public ExpoLayoutEditor ExpoLayoutEditor { get; private set; }
+    public AmbientController AmbientController { get; private set; }
 
     public static GameManager Instance;
 
@@ -27,5 +28,6 @@ public class GameManager : MonoBehaviour
         SceneLoader = GetComponent<SceneLoader>();
         DataLoader = GetComponentInChildren<DataLoader>();
         ExpoLayoutEditor = GetComponent<ExpoLayoutEditor>();
+        AmbientController = GetComponentInChildren<AmbientController>();
     }
 }

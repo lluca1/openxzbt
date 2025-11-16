@@ -11,8 +11,21 @@ public class ExpoTile : MonoBehaviour
 
     public float GetSize() => transform.localScale.x * 10;
 
+    // Initialization of materials is often done in Awake/Start or here.
+    // We clone the default material so we can modify it without affecting the original asset.
+    private void InitMaterials()
+    {
+        if (floorTexture == null && floor.material != null)
+            floorTexture = new Material(floor.material);
+        if (ceilingTexture == null && ceiling.material != null)
+            ceilingTexture = new Material(ceiling.material);
+        if (wallTexture == null && wallL.material != null)
+            wallTexture = new Material(wallL.material);
+    }
+
     private void Setup(TileType tileType)
     {
+        // Assign the (potentially customized) material instances to the Renderers
         floor.material = floorTexture;
         ceiling.material = ceilingTexture;
         wallL.material = wallTexture;
@@ -20,54 +33,37 @@ public class ExpoTile : MonoBehaviour
         wallB.material = wallTexture;
         wallF.material = wallTexture;
 
-        /*wallL.gameObject.SetActive(false);
-        wallR.gameObject.SetActive(false);
-        wallB.gameObject.SetActive(false);
-        wallF.gameObject.SetActive(false);
-
-        switch (tileType)
-        {
-            case TileType.I:
-                wallR.gameObject.SetActive(true);
-                break;
-            case TileType.II:
-                wallL.gameObject.SetActive(true);
-                wallR.gameObject.SetActive(true);
-                break;
-            case TileType.L:
-                wallR.gameObject.SetActive(true);
-                wallF.gameObject.SetActive(true);
-                break;
-            case TileType.U:
-                wallL.gameObject.SetActive(true);
-                wallF.gameObject.SetActive(true);
-                wallR.gameObject.SetActive(true);
-                break;
-        }*/
+        /* wall activation logic remains commented out */
     }
 
     private void LoadFloorTexture(Texture2D texture)
     {
-        floorTexture.mainTexture = texture;
+        if (texture != null)
+            floorTexture.mainTexture = texture;
     }
 
     private void LoadCeilingTexture(Texture2D texture)
     {
-        ceilingTexture.mainTexture = texture;
+        if (texture != null)
+            ceilingTexture.mainTexture = texture;
     }
 
     private void LoadWallTexture(Texture2D texture)
     {
-        wallTexture.mainTexture = texture;
+        if (texture != null)
+            wallTexture.mainTexture = texture;
     }
 
-    public void LoadData(TileType tileType, string expoId, int hasExhibit)
+    // UPDATED IMPLEMENTATION for custom textures
+    public void LoadData(TileType tileType, int hasExhibit, ExpoData expoData)
     {
+        InitMaterials();
+
         var dataLoader = GameManager.Instance.DataLoader;
 
-        dataLoader.LoadTexture(expoId, LoadFloorTexture);
-        dataLoader.LoadTexture(expoId, LoadCeilingTexture);
-        dataLoader.LoadTexture(expoId, LoadWallTexture);
+        dataLoader.LoadTexture(expoData.floor_texture, LoadFloorTexture);
+        dataLoader.LoadTexture(expoData.ceiling_texture, LoadCeilingTexture);
+        dataLoader.LoadTexture(expoData.wall_texture, LoadWallTexture);
 
         if (hasExhibit == 1)
         {
@@ -77,7 +73,7 @@ public class ExpoTile : MonoBehaviour
         Setup(tileType);
     }
 
-    public void LoadData(TileType tileType, ExpoPreset preset, int presetIndex, int hasExhibit)
+    public void LoadData(TileType tileType, int hasExhibit, ExpoPreset preset, int presetIndex)
     {
         floorTexture = preset.floorTexture;
         ceilingTexture = preset.ceilingTexture;
