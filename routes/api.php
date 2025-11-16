@@ -17,7 +17,5 @@ Route::get('/expositions/{exposition}/layout', function (\App\Models\Exposition 
 
     return response()->json([
         'exposition' => $exposition,
-        'tiles' => $exposition->tiles,
-        'exhibits' => $exposition->exhibits,
     ]);
 });

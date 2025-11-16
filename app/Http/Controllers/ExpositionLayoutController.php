@@ -44,12 +44,12 @@ class ExpositionLayoutController extends Controller
 
     private function syncTiles(Exposition $exposition, Collection $tiles): void
     {
-        $identifiers = $tiles->pluck('tile_identifier');
+        $identifiers = $tiles->pluck('id');
 
         foreach ($tiles as $tileData) {
             $exposition->tiles()->updateOrCreate(
                 [
-                    'tile_identifier' => $tileData['tile_identifier'],
+                    'tile_identifier' => $tileData['id'],
                 ],
                 [
                     'type' => $tileData['type'],

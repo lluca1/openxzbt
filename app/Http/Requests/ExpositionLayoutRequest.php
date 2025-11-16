@@ -35,7 +35,7 @@ class ExpositionLayoutRequest extends FormRequest
             'player_spawn.*' => ['numeric'],
 
             'tiles' => ['required', 'array'],
-            'tiles.*.tile_identifier' => ['required', 'string', 'max:255'],
+            'tiles.*.id' => ['required', 'string', 'max:255'],
             'tiles.*.type' => ['required', 'integer', 'between:0,65535'],
             'tiles.*.position' => ['required', 'array', 'size:3'],
             'tiles.*.position.*' => ['numeric'],
