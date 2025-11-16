@@ -8,9 +8,6 @@
         $otherExpositions = isset($expositions)
             ? $expositions->where('user_id', '!=', auth()->id())
             : collect();
-
-        // default avatar file (same as home.blade.php)
-        $defaultAvatarFile = 'you-avatar-cap_on-cap_color_default-body_color_default.png';
     @endphp
 
     <form wire:submit.prevent="save">
@@ -255,65 +252,13 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
                 @foreach ($yourExpositions as $exposition)
-                    @php
-                        $owner = $exposition->user ?: auth()->user();
-
-                        $avatarFile = $defaultAvatarFile;
-
-                        if ($owner) {
-                            // 1) relation already has avatar
-                            if (!empty($owner->avatar)) {
-                                $avatarFile = $owner->avatar;
-                            }
-                            // 2) owner is current user, use auth()->user()->avatar
-                            elseif (auth()->check() && $owner->id === auth()->id() && !empty(auth()->user()->avatar)) {
-                                $avatarFile = auth()->user()->avatar;
-                            }
-                            // 3) as last fallback, refetch owner with avatar column
-                            elseif (!empty($owner->id)) {
-                                $freshOwner = \App\Models\User::find($owner->id);
-                                if ($freshOwner && !empty($freshOwner->avatar)) {
-                                    $avatarFile = $freshOwner->avatar;
-                                }
-                            }
-                        }
-                    @endphp
-
                     <x-exposition.card
                         :exposition="$exposition"
                         :index="$loop->iteration"
                         wire:key="your-exposition-{{ $exposition->id }}"
-                    >
-                        <div class="mt-3 flex items-center justify-between gap-3">
-                            <div class="flex items-center gap-2">
-                                <div class="h-8 w-8 bg-[#111] border border-white/15 overflow-hidden rounded-none">
-                                    <img
-                                        src="{{ asset('assets/img/' . $avatarFile) }}"
-                                        alt="owner avatar"
-                                        class="w-full h-full object-contain"
-                                    >
-                                </div>
-                                <span class="text-[11px] text-white/60">
-                                    {{ $owner ? $owner->name : 'unknown_user' }}
-                                </span>
-                            </div>
-
-                            <div class="flex items-center gap-2">
-                                <a href="{{ route('expositions.show', $exposition) }}"
-                                   class="border border-zinc-600 hover:border-zinc-300 px-3 py-1 rounded-none text-[11px] text-left">
-                                    :: MANAGE EXHIBITS
-                                </a>
-
-                                <button
-                                    type="button"
-                                    wire:click="delete({{ $exposition->id }})"
-                                    class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none text-[11px] hover:bg-[#7f1717]"
-                                >
-                                    :: DELETE
-                                </button>
-                            </div>
-                        </div>
-                    </x-exposition.card>
+                        action-variant="manage"
+                        delete-mode="wire"
+                    />
                 @endforeach
             </div>
         </div>
@@ -330,48 +275,11 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
                 @foreach ($otherExpositions as $exposition)
-                    @php
-                        $owner = $exposition->user ?: null;
-
-                        $avatarFile = $defaultAvatarFile;
-
-                        if ($owner) {
-                            if (!empty($owner->avatar)) {
-                                $avatarFile = $owner->avatar;
-                            } elseif (!empty($owner->id)) {
-                                $freshOwner = \App\Models\User::find($owner->id);
-                                if ($freshOwner && !empty($freshOwner->avatar)) {
-                                    $avatarFile = $freshOwner->avatar;
-                                }
-                            }
-                        }
-                    @endphp
-
                     <x-exposition.card
                         :exposition="$exposition"
                         :index="$loop->iteration"
                         wire:key="other-exposition-{{ $exposition->id }}"
-                    >
-                        <div class="mt-3 flex items-center justify-between gap-3">
-                            <div class="flex items-center gap-2">
-                                <div class="h-8 w-8 bg-[#111] border border-white/15 overflow-hidden rounded-none">
-                                    <img
-                                        src="{{ asset('assets/img/' . $avatarFile) }}"
-                                        alt="owner avatar"
-                                        class="w-full h-full object-contain"
-                                    >
-                                </div>
-                                <span class="text-[11px] text-white/60">
-                                    {{ $owner ? $owner->name : 'unknown_user' }}
-                                </span>
-                            </div>
-
-                            <a href="{{ route('expositions.show', $exposition) }}"
-                               class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#7f1717]/80 text-left text-[11px]">
-                                view_details ->
-                            </a>
-                        </div>
-                    </x-exposition.card>
+                    />
                 @endforeach
             </div>
         </div>

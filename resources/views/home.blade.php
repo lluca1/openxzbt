@@ -83,7 +83,6 @@
 
 
         </section>
-
         {{-- SCAN FOR EXPOS@ (LIVEWIRE SEARCH) --}}
         <livewire:expo-scan />
 
@@ -114,24 +113,9 @@
                                     :exposition="$expo"
                                     :index="$loop->iteration"
                                     :description-limit="140"
-                                >
-                                    <div class="flex gap-2">
-                                        <a href="{{ route('expositions.show', $expo) }}"
-                                           class="flex-1 border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-center rounded-none">
-                                            :: MANAGE EXHIBITS
-                                        </a>
-                                        <form method="POST" action="{{ route('expositions.destroy', $expo) }}" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button
-                                                type="submit"
-                                                class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]"
-                                            >
-                                                :: DELETE
-                                            </button>
-                                        </form>
-                                    </div>
-                                </x-exposition.card>
+                                    action-variant="manage"
+                                    delete-mode="form"
+                                />
                             @endforeach
                         </div>
                     </div>
@@ -160,19 +144,7 @@
                                 :exposition="$expo"
                                 :index="$loop->iteration"
                                 :description-limit="140"
-                            >
-                                @guest
-                                    <a href="{{ route('login') }}"
-                                       class="border border-white/30 text-white px-3 py-1 rounded-none">
-                                        login_to_view →
-                                    </a>
-                                @else
-                                    <a href="{{ route('expositions.show', $expo) }}"
-                                       class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#7f1717]/80 text-left">
-                                        view_details →
-                                    </a>
-                                @endguest
-                            </x-exposition.card>
+                            />
                         @endforeach
                     </div>
                 @else
