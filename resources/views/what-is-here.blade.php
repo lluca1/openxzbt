@@ -15,7 +15,7 @@
         <div class="border border-zinc-700 bg-[#050608] rounded-none px-6 py-4">
             <p class="text-[11px] text-zinc-400 leading-relaxed">
                 this section keeps everything you need to get the client running: the
-                <span class="text-zinc-200">latest world-loader build</span> and a
+                <span class="text-zinc-200">latest expo simulator build</span> and a
                 <span class="text-zinc-200">brief run-through</span> before you start curating.
                 nothing theatrical here—just the files and the context to use them.
             </p>
@@ -26,7 +26,7 @@
             <div class="border border-zinc-700 bg-[#050608] rounded-none p-6 flex flex-col justify-between">
                 <div class="space-y-3">
                     <h3 class="text-sm font-semibold text-white tracking-tight">
-                        download the world-loader
+                        download the expo simulator
                     </h3>
 
                     <p class="text-xs text-zinc-400 leading-relaxed">
@@ -48,7 +48,7 @@
                                hover:bg-[#facc15]/20 transition-colors"
                     >
                         <span class="h-2 w-2 rounded-full bg-[#facc15]"></span>
-                        download world-loader (.zip)
+                        download expo simulator (.zip)
                     </a>
 
                     <p class="mt-3 text-[11px] text-zinc-500">
