@@ -22,6 +22,10 @@ class Exposition extends Model
         'is_public',
         'preset_theme',
         'player_spawn',
+        'floor_texture',
+        'ceiling_texture',
+        'wall_texture',
+        'ambient_track',
     ];
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ExpositionResource extends JsonResource
 {
@@ -31,11 +32,10 @@ class ExpositionResource extends JsonResource
             
             'tiles' => TileResource::collection($this->whenLoaded('tiles')),
             
-            //todo
-            'floor_texture'=>'',
-            'ceiling_texture'=>'',
-            'wall_texture'=>'',
-            'ambient_track'=>'',
+            'floor_texture' => $this->floor_texture ? Storage::url($this->floor_texture) : null,
+            'ceiling_texture' => $this->ceiling_texture ? Storage::url($this->ceiling_texture) : null,
+            'wall_texture' => $this->wall_texture ? Storage::url($this->wall_texture) : null,
+            'ambient_track' => $this->ambient_track ? Storage::url($this->ambient_track) : null,
             
             'meta' => [
                 'exhibits_count' => $this->whenLoaded('exhibits', fn () => $this->exhibits->count()),

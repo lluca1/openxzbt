@@ -68,6 +68,78 @@
                             <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    @if ($preset_theme === -1)
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="block text-[11px] text-zinc-400" for="floor_texture">floor texture</label>
+                                <input
+                                    id="floor_texture"
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
+                                    wire:model="floor_texture"
+                                    class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                >
+                                <p class="text-[10px] text-zinc-500">stored under /storage/textures/[expo id]/floor-*. recommended 2k square.</p>
+                                @error('floor_texture')
+                                    <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                                @enderror
+                                <p class="text-[10px] text-zinc-500">status: <span class="text-zinc-300">{{ $floor_texture ? 'ready to upload' : 'none yet' }}</span></p>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[11px] text-zinc-400" for="ceiling_texture">ceiling texture</label>
+                                <input
+                                    id="ceiling_texture"
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
+                                    wire:model="ceiling_texture"
+                                    class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                >
+                                <p class="text-[10px] text-zinc-500">stored under /storage/textures/[expo id]/ceiling-*.</p>
+                                @error('ceiling_texture')
+                                    <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                                @enderror
+                                <p class="text-[10px] text-zinc-500">status: <span class="text-zinc-300">{{ $ceiling_texture ? 'ready to upload' : 'none yet' }}</span></p>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[11px] text-zinc-400" for="wall_texture">wall texture</label>
+                                <input
+                                    id="wall_texture"
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
+                                    wire:model="wall_texture"
+                                    class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                >
+                                <p class="text-[10px] text-zinc-500">stored under /storage/textures/[expo id]/wall-*.</p>
+                                @error('wall_texture')
+                                    <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                                @enderror
+                                <p class="text-[10px] text-zinc-500">status: <span class="text-zinc-300">{{ $wall_texture ? 'ready to upload' : 'none yet' }}</span></p>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[11px] text-zinc-400" for="ambient_track">ambient audio loop</label>
+                                <input
+                                    id="ambient_track"
+                                    type="file"
+                                    accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a"
+                                    wire:model="ambient_track"
+                                    class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                >
+                                <p class="text-[10px] text-zinc-500">saved to /storage/audio/[expo id]/ambient-*.</p>
+                                @error('ambient_track')
+                                    <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                                @enderror
+                                <p class="text-[10px] text-zinc-500">status: <span class="text-zinc-300">{{ $ambient_track ? 'ready to upload' : 'none yet' }}</span></p>
+                            </div>
+                        </div>
+                    @else
+                        <div class="border border-dashed border-zinc-700 rounded-none p-3 text-[11px] text-zinc-500">
+                            environment uploads unlock when you select the custom preset theme.
+                        </div>
+                    @endif
                 </div>
 
                 <div class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-4">
@@ -142,6 +214,14 @@
                         @php($themeLabels = [-1=>'custom',0=>'classic',1=>'medieval',2=>'scifi'])
                         <p>preset theme: <span class="text-zinc-300">{{ $themeLabels[$preset_theme] ?? 'default' }} ({{ $preset_theme }})</span></p>
                         <p>thumbnail: <span class="text-zinc-300">{{ $thumbnail ? 'ready to upload' : 'none yet' }}</span></p>
+                        @if ($preset_theme === -1)
+                            <p>floor texture: <span class="text-zinc-300">{{ $floor_texture ? 'ready to upload' : 'none yet' }}</span></p>
+                            <p>ceiling texture: <span class="text-zinc-300">{{ $ceiling_texture ? 'ready to upload' : 'none yet' }}</span></p>
+                            <p>wall texture: <span class="text-zinc-300">{{ $wall_texture ? 'ready to upload' : 'none yet' }}</span></p>
+                            <p>ambient audio: <span class="text-zinc-300">{{ $ambient_track ? 'ready to upload' : 'none yet' }}</span></p>
+                        @else
+                            <p>environment media: <span class="text-zinc-300">locked to preset theme</span></p>
+                        @endif
                     </div>
                 </div>
 

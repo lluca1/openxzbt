@@ -55,6 +55,18 @@ class ExpositionExhibits extends Component
     #[Rule('nullable|image|max:4096')]
     public $thumbnail;
 
+    #[Rule('nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192')]
+    public $floorTextureUpload;
+
+    #[Rule('nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192')]
+    public $ceilingTextureUpload;
+
+    #[Rule('nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192')]
+    public $wallTextureUpload;
+
+    #[Rule('nullable|file|mimes:mp3,wav,ogg,flac,m4a|max:30720')]
+    public $ambientTrackUpload;
+
     public function mount(Exposition $exposition): void
     {
         $this->exposition = $exposition;
@@ -317,6 +329,90 @@ class ExpositionExhibits extends Component
         $this->reset(['thumbnail']);
     }
 
+    public function saveEnvironmentAssets(): void
+    {
+        $this->ensureExpositionOwner();
+
+        $this->validate([
+            'floorTextureUpload' => 'nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192',
+            'ceilingTextureUpload' => 'nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192',
+            'wallTextureUpload' => 'nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192',
+            'ambientTrackUpload' => 'nullable|file|mimes:mp3,wav,ogg,flac,m4a|max:30720',
+        ]);
+
+        $updates = [];
+
+        if ($this->floorTextureUpload) {
+            $updates['floor_texture'] = $this->storeEnvironmentAsset(
+                $this->floorTextureUpload,
+                'floor_texture',
+                'floor-texture',
+                'textures'
+            );
+        }
+
+        if ($this->ceilingTextureUpload) {
+            $updates['ceiling_texture'] = $this->storeEnvironmentAsset(
+                $this->ceilingTextureUpload,
+                'ceiling_texture',
+                'ceiling-texture',
+                'textures'
+            );
+        }
+
+        if ($this->wallTextureUpload) {
+            $updates['wall_texture'] = $this->storeEnvironmentAsset(
+                $this->wallTextureUpload,
+                'wall_texture',
+                'wall-texture',
+                'textures'
+            );
+        }
+
+        if ($this->ambientTrackUpload) {
+            $updates['ambient_track'] = $this->storeEnvironmentAsset(
+                $this->ambientTrackUpload,
+                'ambient_track',
+                'ambient-track',
+                'audio'
+            );
+        }
+
+        if ($updates) {
+            $this->exposition->update($updates);
+            $this->exposition->refresh();
+        }
+
+        $this->reset(['floorTextureUpload', 'ceilingTextureUpload', 'wallTextureUpload', 'ambientTrackUpload']);
+    }
+
+    public function clearEnvironmentAsset(string $type): void
+    {
+        $this->ensureExpositionOwner();
+
+        $column = match ($type) {
+            'floor' => 'floor_texture',
+            'ceiling' => 'ceiling_texture',
+            'wall' => 'wall_texture',
+            'ambient' => 'ambient_track',
+            default => null,
+        };
+
+        if (! $column) {
+            return;
+        }
+
+        $path = $this->exposition->{$column};
+
+        if (! $path) {
+            return;
+        }
+
+        Storage::disk('public')->delete($path);
+        $this->exposition->update([$column => null]);
+        $this->exposition->refresh();
+    }
+
     private function ensureExpositionOwner(): int
     {
         $userId = Auth::id();
@@ -341,4 +437,18 @@ class ExpositionExhibits extends Component
         return $userId;
     }
 
+    private function storeEnvironmentAsset($file, string $column, string $prefix, string $directory): string
+    {
+        $existing = $this->exposition->{$column};
+        $extension = $file->getClientOriginalExtension() ?: $file->extension();
+        $filename = $prefix.'-'.Str::uuid().'.'.$extension;
+
+        $path = $file->storeAs($directory.'/'.$this->exposition->id, $filename, 'public');
+
+        if ($existing) {
+            Storage::disk('public')->delete($existing);
+        }
+
+        return $path;
+    }
 }

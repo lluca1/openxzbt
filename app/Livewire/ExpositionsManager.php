@@ -33,6 +33,18 @@ class ExpositionsManager extends Component
     #[Rule('nullable|image|max:4096')]
     public $thumbnail;
 
+    #[Rule('nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192')]
+    public $floor_texture;
+
+    #[Rule('nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192')]
+    public $ceiling_texture;
+
+    #[Rule('nullable|image|mimes:jpg,jpeg,png,bmp,webp,avif|max:8192')]
+    public $wall_texture;
+
+    #[Rule('nullable|file|mimes:mp3,wav,ogg,flac,m4a|max:30720')]
+    public $ambient_track;
+
     public function mount(): void
     {
         $this->loadExpositions();
@@ -69,7 +81,39 @@ class ExpositionsManager extends Component
             $exposition->update(['cover_image_path' => $path]);
         }
 
-        $this->reset(['title', 'description', 'is_public', 'preset_theme', 'thumbnail']);
+        $updates = [];
+
+        if ($this->floor_texture) {
+            $updates['floor_texture'] = $this->storeExpoAsset($this->floor_texture, $exposition->id, 'floor-texture', 'textures');
+        }
+
+        if ($this->ceiling_texture) {
+            $updates['ceiling_texture'] = $this->storeExpoAsset($this->ceiling_texture, $exposition->id, 'ceiling-texture', 'textures');
+        }
+
+        if ($this->wall_texture) {
+            $updates['wall_texture'] = $this->storeExpoAsset($this->wall_texture, $exposition->id, 'wall-texture', 'textures');
+        }
+
+        if ($this->ambient_track) {
+            $updates['ambient_track'] = $this->storeExpoAsset($this->ambient_track, $exposition->id, 'ambient-track', 'audio');
+        }
+
+        if ($updates) {
+            $exposition->update($updates);
+        }
+
+        $this->reset([
+            'title',
+            'description',
+            'is_public',
+            'preset_theme',
+            'thumbnail',
+            'floor_texture',
+            'ceiling_texture',
+            'wall_texture',
+            'ambient_track',
+        ]);
         $this->is_public = true;
         $this->preset_theme = -1;
 
@@ -116,5 +160,13 @@ class ExpositionsManager extends Component
             ->with(['user:id,name'])
             ->withCount(['exhibits', 'likes'])
             ->get();
+    }
+
+    private function storeExpoAsset($file, int $expositionId, string $prefix, string $directory): string
+    {
+        $extension = $file->getClientOriginalExtension() ?: $file->extension();
+        $filename = $prefix.'-'.Str::uuid().'.'.$extension;
+
+        return $file->storeAs($directory.'/'.$expositionId, $filename, 'public');
     }
 }

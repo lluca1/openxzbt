@@ -21,6 +21,12 @@ class ExpositionFactory extends Factory
             'description' => fake()->paragraph(),
             'cover_image_path' => null,
             'is_public' => fake()->boolean(80),
+            'preset_theme' => -1,
+            'player_spawn' => null,
+            'floor_texture' => null,
+            'ceiling_texture' => null,
+            'wall_texture' => null,
+            'ambient_track' => null,
         ];
     }
 

@@ -230,6 +230,150 @@
                     </div>
                 </div>
 
+                <div class="space-y-3 mt-6">
+                    <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">environment textures &amp; ambient audio</h2>
+                    @if (($exposition->preset_theme ?? -1) === -1)
+                        <p class="text-[11px] text-zinc-500">
+                            upload optional tiling textures and a looping soundtrack. files are stored under /storage/textures/{{ $exposition->id }} and /storage/audio/{{ $exposition->id }}.
+                        </p>
+
+                        <form wire:submit.prevent="saveEnvironmentAssets" class="space-y-4">
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="space-y-2">
+                                    <label class="block text-[11px] text-zinc-400" for="floorTextureUpload">floor texture</label>
+                                    <input
+                                        id="floorTextureUpload"
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
+                                        wire:model="floorTextureUpload"
+                                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-400 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                    >
+                                    <p class="text-[10px] text-zinc-500">
+                                        current:
+                                        @if ($exposition->floor_texture)
+                                            <a href="{{ \Illuminate\Support\Facades\Storage::url($exposition->floor_texture) }}" class="text-[#38bdf8] underline" target="_blank">
+                                                {{ basename($exposition->floor_texture) }}
+                                            </a>
+                                        @else
+                                            <span class="text-zinc-300">none</span>
+                                        @endif
+                                    </p>
+                                    @if ($exposition->floor_texture)
+                                        <button type="button" wire:click="clearEnvironmentAsset('floor')" class="text-[10px] text-[#f97373] hover:text-[#fca5a5]">
+                                            remove floor texture
+                                        </button>
+                                    @endif
+                                    @error('floorTextureUpload')
+                                        <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-[11px] text-zinc-400" for="ceilingTextureUpload">ceiling texture</label>
+                                    <input
+                                        id="ceilingTextureUpload"
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
+                                        wire:model="ceilingTextureUpload"
+                                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-400 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                    >
+                                    <p class="text-[10px] text-zinc-500">
+                                        current:
+                                        @if ($exposition->ceiling_texture)
+                                            <a href="{{ \Illuminate\Support\Facades\Storage::url($exposition->ceiling_texture) }}" class="text-[#38bdf8] underline" target="_blank">
+                                                {{ basename($exposition->ceiling_texture) }}
+                                            </a>
+                                        @else
+                                            <span class="text-zinc-300">none</span>
+                                        @endif
+                                    </p>
+                                    @if ($exposition->ceiling_texture)
+                                        <button type="button" wire:click="clearEnvironmentAsset('ceiling')" class="text-[10px] text-[#f97373] hover:text-[#fca5a5]">
+                                            remove ceiling texture
+                                        </button>
+                                    @endif
+                                    @error('ceilingTextureUpload')
+                                        <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-[11px] text-zinc-400" for="wallTextureUpload">wall texture</label>
+                                    <input
+                                        id="wallTextureUpload"
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
+                                        wire:model="wallTextureUpload"
+                                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-400 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                    >
+                                    <p class="text-[10px] text-zinc-500">
+                                        current:
+                                        @if ($exposition->wall_texture)
+                                            <a href="{{ \Illuminate\Support\Facades\Storage::url($exposition->wall_texture) }}" class="text-[#38bdf8] underline" target="_blank">
+                                                {{ basename($exposition->wall_texture) }}
+                                            </a>
+                                        @else
+                                            <span class="text-zinc-300">none</span>
+                                        @endif
+                                    </p>
+                                    @if ($exposition->wall_texture)
+                                        <button type="button" wire:click="clearEnvironmentAsset('wall')" class="text-[10px] text-[#f97373] hover:text-[#fca5a5]">
+                                            remove wall texture
+                                        </button>
+                                    @endif
+                                    @error('wallTextureUpload')
+                                        <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-[11px] text-zinc-400" for="ambientTrackUpload">ambient audio loop</label>
+                                    <input
+                                        id="ambientTrackUpload"
+                                        type="file"
+                                        accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a"
+                                        wire:model="ambientTrackUpload"
+                                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-400 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                    >
+                                    <p class="text-[10px] text-zinc-500">
+                                        current:
+                                        @if ($exposition->ambient_track)
+                                            <a href="{{ \Illuminate\Support\Facades\Storage::url($exposition->ambient_track) }}" class="text-[#38bdf8] underline" target="_blank">
+                                                {{ basename($exposition->ambient_track) }}
+                                            </a>
+                                        @else
+                                            <span class="text-zinc-300">none</span>
+                                        @endif
+                                    </p>
+                                    @if ($exposition->ambient_track)
+                                        <button type="button" wire:click="clearEnvironmentAsset('ambient')" class="text-[10px] text-[#f97373] hover:text-[#fca5a5]">
+                                            remove ambient audio
+                                        </button>
+                                    @endif
+                                    @error('ambientTrackUpload')
+                                        <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                                    @enderror
+                                    <p class="text-[10px] text-zinc-500">supports mp3, wav, ogg, flac, m4a up to ~30 MB.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <button
+                                    type="submit"
+                                    class="px-3 py-1 border border-[#38bdf8]/80 bg-[#072635] text-[#bae6fd] text-[11px] rounded-none hover:bg-[#0a3a50]"
+                                >
+                                    :: SAVE ENVIRONMENT MEDIA
+                                </button>
+                                <p class="text-[10px] text-zinc-500">leave fields blank to keep existing files untouched.</p>
+                            </div>
+                        </form>
+                    @else
+                        <div class="border border-dashed border-zinc-700 rounded-none p-3 text-[11px] text-zinc-500">
+                            preset themes manage their own materials. switch to custom if you need bespoke textures or audio.
+                        </div>
+                    @endif
+                </div>
+
                 {{-- EXHIBIT UPLOAD FORM --}}
                 <x-expositions.upload-form />
             @else
