@@ -5,6 +5,7 @@
             <div>
                 <p class="text-[11px] text-zinc-500">
                     {{ $exposition->is_public ? 'public exposition' : 'private' }}
+                    · id {{ $exposition->id }}
                     ·
                     {{ $exposition->exhibits->count() }} exhibits
                 </p>
