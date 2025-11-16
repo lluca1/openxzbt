@@ -33,7 +33,7 @@
                             @elseif(request()->routeIs('what.is.here'))
                                 what_is_here
                             @else
-                                3d_exposition_index
+                                exposition_manager
                             @endif
                         </span>
                     </div>
@@ -194,7 +194,7 @@
 
                     <div class="flex flex-wrap justify-center gap-3">
                         <span class="px-3 py-1 border border-[#38bdf8]/70 bg-[#072635] rounded-none">
-                            endpoint: /expositions
+                            GET endpoint: /api/expositions/{expo_id}
                         </span>
 
                         <span class="px-3 py-1 border border-[#22c55e]/70 bg-[#052713] rounded-none">
@@ -206,7 +206,7 @@
                         </span>
 
                         <span class="px-3 py-1 border border-[#f97373]/70 bg-[#5b1010] rounded-none">
-                            unity_client_required
+                            unity client required
                         </span>
                     </div>
                 </div>

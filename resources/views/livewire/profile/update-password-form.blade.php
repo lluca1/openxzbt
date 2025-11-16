@@ -40,10 +40,6 @@ new class extends Component
 
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-100">
-            :: password_core
-        </h2>
-
         <p class="mt-1 text-xs text-zinc-400">
             rotate your access key with something long and unguessable.
         </p>
