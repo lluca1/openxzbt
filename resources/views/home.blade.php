@@ -96,84 +96,92 @@
             @endphp
 
             @if($yourExpositions->isNotEmpty())
-                <section class="space-y-4">
+                <details class="border border-white/15 bg-[#090909] group" aria-label="Toggle your expositions">
+                    <summary class="flex items-center justify-between px-4 py-3 cursor-pointer list-none">
+                        <span class="text-lg font-semibold tracking-tight text-white">
+                            your expositions
+                        </span>
+                        <span class="text-xs uppercase tracking-wide text-white/50">
+                            <span class="group-open:hidden">click to expand</span>
+                            <span class="hidden group-open:inline">click to collapse</span>
+                        </span>
+                    </summary>
 
-                    <h3 class="text-lg font-semibold tracking-tight text-white">
-                        your expositions
-                    </h3>
-
-                    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        @foreach ($yourExpositions as $expo)
-                            <x-exposition.card
-                                :exposition="$expo"
-                                :index="$loop->iteration"
-                                :description-limit="140"
-                            >
-                                <div class="flex gap-2">
-                                    <a href="{{ route('expositions.show', $expo) }}"
-                                       class="flex-1 border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-center rounded-none">
-                                        :: MANAGE EXHIBITS
-                                    </a>
-                                    <form method="POST" action="{{ route('expositions.destroy', $expo) }}" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button
-                                            type="submit"
-                                            class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]"
-                                        >
-                                            :: DELETE
-                                        </button>
-                                    </form>
-                                </div>
-                            </x-exposition.card>
-                        @endforeach
+                    <div class="px-4 pb-4 space-y-4">
+                        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            @foreach ($yourExpositions as $expo)
+                                <x-exposition.card
+                                    :exposition="$expo"
+                                    :index="$loop->iteration"
+                                    :description-limit="140"
+                                >
+                                    <div class="flex gap-2">
+                                        <a href="{{ route('expositions.show', $expo) }}"
+                                           class="flex-1 border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-center rounded-none">
+                                            :: MANAGE EXHIBITS
+                                        </a>
+                                        <form method="POST" action="{{ route('expositions.destroy', $expo) }}" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button
+                                                type="submit"
+                                                class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]"
+                                            >
+                                                :: DELETE
+                                            </button>
+                                        </form>
+                                    </div>
+                                </x-exposition.card>
+                            @endforeach
+                        </div>
                     </div>
-
-                </section>
+                </details>
             @endif
         @endauth
 
 
         {{-- PUBLIC EXPOSITIONS SECTION --}}
-        <section class="space-y-4">
+        <details class="border border-white/15 bg-[#090909] group" aria-label="Toggle featured public expositions">
+            <summary class="flex items-center justify-between px-4 py-3 cursor-pointer list-none">
+                <span class="text-lg font-semibold tracking-tight text-white">
+                    featured public expositions
+                </span>
+                <span class="text-xs uppercase tracking-wide text-white/50">
+                    <span class="group-open:hidden">click to expand</span>
+                    <span class="hidden group-open:inline">click to collapse</span>
+                </span>
+            </summary>
 
-            <h3 class="text-lg font-semibold tracking-tight text-white">
-                featured public expositions
-            </h3>
-
-            <p class="text-xs text-white/40">
-                curated selection of latest public builds.
-            </p>
-
-            @if(isset($expositions) && $expositions->isNotEmpty())
-                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    @foreach ($expositions as $expo)
-                        <x-exposition.card
-                            :exposition="$expo"
-                            :index="$loop->iteration"
-                            :description-limit="140"
-                        >
-                            @guest
-                                <a href="{{ route('login') }}"
-                                   class="border border-white/30 text-white px-3 py-1 rounded-none">
-                                    login_to_view →
-                                </a>
-                            @else
-                                <a href="{{ route('expositions.show', $expo) }}"
-                                   class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#7f1717]/80 text-left">
-                                    view_details →
-                                </a>
-                            @endguest
-                        </x-exposition.card>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-sm text-white/40">
-                    no public expositions yet.
-                </p>
-            @endif
-
-        </section>
+            <div class="px-4 pb-4 space-y-4">
+                @if(isset($expositions) && $expositions->isNotEmpty())
+                    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        @foreach ($expositions as $expo)
+                            <x-exposition.card
+                                :exposition="$expo"
+                                :index="$loop->iteration"
+                                :description-limit="140"
+                            >
+                                @guest
+                                    <a href="{{ route('login') }}"
+                                       class="border border-white/30 text-white px-3 py-1 rounded-none">
+                                        login_to_view →
+                                    </a>
+                                @else
+                                    <a href="{{ route('expositions.show', $expo) }}"
+                                       class="border border-[#f97373]/70 bg-[#5b1010] text-[#ffecec] px-3 py-1 rounded-none hover:bg-[#7f1717]/80 text-left">
+                                        view_details →
+                                    </a>
+                                @endguest
+                            </x-exposition.card>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-sm text-white/40">
+                        no public expositions yet.
+                    </p>
+                @endif
+            </div>
+        </details>
 
     </div>
 
