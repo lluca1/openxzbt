@@ -8,7 +8,7 @@ It combines a Laravel Breeze + Livewire web app with a Unity 3D environment edit
 Backend: Laravel, Livewire, Breeze
 Frontend: Tailwind CSS, Vite, NPM
 Database: MySQL
-3D Client: Unity (OpenGL 3.0)
+3D Client: Unity
 Deployment: Laravel Forge
 
 ## 🏗️ Repository Structure
