@@ -465,32 +465,75 @@ class ExpositionExhibits extends Component
         return $path;
     }
 
+    public function updatedExhibitSizes($value, $key): void
+    {
+        if ($key === null) {
+            return;
+        }
+
+        $this->exhibitSizes[$key] = $this->clampSize($value);
+    }
+
     public function updateExhibitSize(int $exhibitId): void
+    {
+        $this->saveExhibitSize($exhibitId);
+    }
+
+    public function saveExhibitSize(int $exhibitId): void
+    {
+        $value = $this->exhibitSizes[$exhibitId] ?? null;
+
+        $this->persistExhibitSize($exhibitId, $value, true);
+    }
+
+    private function persistExhibitSize(int $exhibitId, float|string|null $value, bool $refreshCollection = false): void
     {
         if (! $this->isOwner) {
             return;
         }
 
-        $value = $this->exhibitSizes[$exhibitId] ?? null;
-
-        if ($value === null) {
+        if ($value === null || $value === '') {
             return;
         }
 
-        $value = max(1.0, min(10.0, round((float) $value, 1)));
+        $value = $this->clampSize($value);
         $this->exhibitSizes[$exhibitId] = $value;
 
         $exhibit = $this->exposition->exhibits()->whereKey($exhibitId)->first();
 
-        if (! $exhibit) {
-            return;
-        }
-
-        if ($exhibit->size === $value) {
+        if (! $exhibit || (float) $exhibit->size === $value) {
             return;
         }
 
         $exhibit->update(['size' => $value]);
-        $this->loadExhibits();
+
+        if ($refreshCollection) {
+            $this->loadExhibits();
+            return;
+        }
+
+        if ($this->exhibits instanceof \Illuminate\Support\Collection) {
+            $this->exhibits = $this->exhibits->map(function ($localExhibit) use ($exhibitId, $value) {
+                if ((int) $localExhibit->id === $exhibitId) {
+                    $localExhibit->size = $value;
+                }
+
+                return $localExhibit;
+            });
+
+            return;
+        }
+
+        foreach ($this->exhibits as $index => $localExhibit) {
+            if ((int) $localExhibit->id === $exhibitId) {
+                $this->exhibits[$index]->size = $value;
+                break;
+            }
+        }
+    }
+
+    private function clampSize(float|string|null $value): float
+    {
+        return max(1.0, min(10.0, round((float) ($value ?? 1.0), 1)));
     }
 }

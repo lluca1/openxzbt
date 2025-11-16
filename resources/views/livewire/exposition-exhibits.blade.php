@@ -376,30 +376,6 @@
 
                 {{-- EXHIBIT UPLOAD FORM --}}
                 <x-expositions.upload-form />
-
-                <div class="space-y-2 border border-zinc-700 rounded-none p-3 bg-zinc-900/20">
-                    <div class="flex items-center justify-between gap-3">
-                        <div>
-                            <p class="text-[11px] text-zinc-400">default size multiplier</p>
-                            <p class="text-[10px] text-zinc-500">applies to the next exhibit you upload.</p>
-                        </div>
-                        <span class="text-[12px] text-zinc-100 font-mono">{{ number_format((float) $size, 1) }}&times;</span>
-                    </div>
-                    <input
-                        id="exhibit-size"
-                        type="range"
-                        min="1"
-                        max="10"
-                        step="0.1"
-                        wire:model.live="size"
-                        class="slider-square w-full accent-[#facc15]"
-                        style="--slider-thumb-color:#facc15"
-                    >
-                    <p class="text-[10px] text-zinc-500">fine-tune before uploading; you can still adjust each exhibit below later.</p>
-                    @error('size')
-                        <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
-                    @enderror
-                </div>
             @else
                 {{-- READ ONLY --}}
                 <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">read-only mode</h2>
@@ -441,26 +417,46 @@
                             <span class="text-zinc-300">{{ $exhibit->media_path }}</span>
                         </p>
 
-                        <div class="space-y-1 pt-1">
+                        <div class="space-y-3 pt-1">
                             <div class="flex items-center justify-between text-[10px] text-zinc-500">
                                 <span>size multiplier</span>
                                 <span class="text-zinc-300 font-mono">
-                                    {{ number_format((float) ($exhibitSizes[$exhibit->id] ?? $exhibit->size ?? 1), 1) }}&times;
+                                    <span
+                                        class="js-slider-output"
+                                        data-slider-output="exhibit-{{ $exhibit->id }}"
+                                    >
+                                        {{ number_format((float) ($exhibitSizes[$exhibit->id] ?? $exhibit->size ?? 1), 1) }}
+                                    </span>&times;
                                 </span>
                             </div>
 
                             @if ($isOwner)
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="10"
-                                    step="0.1"
-                                    wire:model.live.debounce.300ms="exhibitSizes.{{ $exhibit->id }}"
-                                    wire:change="updateExhibitSize({{ $exhibit->id }})"
-                                    class="slider-square w-full accent-[#facc15]"
-                                    style="--slider-thumb-color:#facc15"
-                                >
-                                <p class="text-[10px] text-zinc-500">updates immediately for visitors.</p>
+                                <div class="space-y-2">
+                                    <input
+                                        id="exhibit-size-{{ $exhibit->id }}"
+                                        type="range"
+                                        min="1"
+                                        max="10"
+                                        step="0.1"
+                                        wire:model.defer="exhibitSizes.{{ $exhibit->id }}"
+                                        class="slider-square w-full accent-[#facc15] js-size-slider"
+                                        style="--slider-thumb-color:#facc15"
+                                        data-slider-target="exhibit-{{ $exhibit->id }}"
+                                    >
+
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-[10px] text-zinc-500">
+                                        <span>drag to preview, then save to push live.</span>
+                                        <button
+                                            type="button"
+                                            wire:click="saveExhibitSize({{ $exhibit->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="saveExhibitSize({{ $exhibit->id }})"
+                                            class="px-3 py-1 border border-[#facc15]/60 text-[#fef9c3] rounded-none bg-[#3b3001]/60 hover:bg-[#4a4003]"
+                                        >
+                                            :: SAVE SIZE
+                                        </button>
+                                    </div>
+                                </div>
                             @else
                                 <p class="text-[10px] text-zinc-500">set by the curator.</p>
                             @endif
@@ -497,3 +493,41 @@
         </div>
     </div>
 </section>
+
+@push('scripts')
+    @once
+        <script>
+            document.addEventListener('livewire:init', () => {
+                const updateOutput = (slider) => {
+                    const targetKey = slider.dataset.sliderTarget;
+                    const output = document.querySelector(`[data-slider-output="${targetKey}"]`);
+
+                    if (!output) {
+                        return;
+                    }
+
+                    const value = Number.parseFloat(slider.value || '1').toFixed(1);
+                    output.textContent = value;
+                };
+
+                const bindSizeSliders = () => {
+                    document.querySelectorAll('[data-slider-target]').forEach((slider) => {
+                        if (slider.dataset.sliderBound === 'true') {
+                            return;
+                        }
+
+                        slider.dataset.sliderBound = 'true';
+                        slider.addEventListener('input', () => updateOutput(slider));
+                        updateOutput(slider);
+                    });
+                };
+
+                bindSizeSliders();
+
+                if (window.Livewire && typeof window.Livewire.hook === 'function') {
+                    window.Livewire.hook('message.processed', bindSizeSliders);
+                }
+            });
+        </script>
+    @endonce
+@endpush
