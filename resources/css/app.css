@@ -17,4 +17,36 @@ body {
 	.input-file-fancy::file-selector-button {
 		@apply mr-3 px-3 py-1.5 border-0 bg-[#072635] text-[#bae6fd] uppercase tracking-[0.2em] rounded-none cursor-pointer font-semibold transition duration-200;
 	}
+
+	.slider-square {
+		@apply w-full appearance-none bg-transparent outline-none;
+	}
+
+	.slider-square::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		height: 16px;
+		width: 16px;
+		border-radius: 0;
+		background-color: var(--slider-thumb-color, #f97373);
+		border: 1px solid var(--slider-thumb-color, #f97373);
+		cursor: pointer;
+	}
+
+	.slider-square::-moz-range-thumb {
+		height: 16px;
+		width: 16px;
+		border-radius: 0;
+		background-color: var(--slider-thumb-color, #f97373);
+		border: 1px solid var(--slider-thumb-color, #f97373);
+		cursor: pointer;
+	}
+
+	.slider-square::-ms-thumb {
+		height: 16px;
+		width: 16px;
+		border-radius: 0;
+		background-color: var(--slider-thumb-color, #f97373);
+		border: 1px solid var(--slider-thumb-color, #f97373);
+		cursor: pointer;
+	}
 }

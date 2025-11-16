@@ -376,6 +376,30 @@
 
                 {{-- EXHIBIT UPLOAD FORM --}}
                 <x-expositions.upload-form />
+
+                <div class="space-y-2 border border-zinc-700 rounded-none p-3 bg-zinc-900/20">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-[11px] text-zinc-400">default size multiplier</p>
+                            <p class="text-[10px] text-zinc-500">applies to the next exhibit you upload.</p>
+                        </div>
+                        <span class="text-[12px] text-zinc-100 font-mono">{{ number_format((float) $size, 1) }}&times;</span>
+                    </div>
+                    <input
+                        id="exhibit-size"
+                        type="range"
+                        min="1"
+                        max="10"
+                        step="0.1"
+                        wire:model.live="size"
+                        class="slider-square w-full accent-[#facc15]"
+                        style="--slider-thumb-color:#facc15"
+                    >
+                    <p class="text-[10px] text-zinc-500">fine-tune before uploading; you can still adjust each exhibit below later.</p>
+                    @error('size')
+                        <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                    @enderror
+                </div>
             @else
                 {{-- READ ONLY --}}
                 <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">read-only mode</h2>
@@ -416,6 +440,31 @@
                             stored under:
                             <span class="text-zinc-300">{{ $exhibit->media_path }}</span>
                         </p>
+
+                        <div class="space-y-1 pt-1">
+                            <div class="flex items-center justify-between text-[10px] text-zinc-500">
+                                <span>size multiplier</span>
+                                <span class="text-zinc-300 font-mono">
+                                    {{ number_format((float) ($exhibitSizes[$exhibit->id] ?? $exhibit->size ?? 1), 1) }}&times;
+                                </span>
+                            </div>
+
+                            @if ($isOwner)
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="10"
+                                    step="0.1"
+                                    wire:model.live.debounce.300ms="exhibitSizes.{{ $exhibit->id }}"
+                                    wire:change="updateExhibitSize({{ $exhibit->id }})"
+                                    class="slider-square w-full accent-[#facc15]"
+                                    style="--slider-thumb-color:#facc15"
+                                >
+                                <p class="text-[10px] text-zinc-500">updates immediately for visitors.</p>
+                            @else
+                                <p class="text-[10px] text-zinc-500">set by the curator.</p>
+                            @endif
+                        </div>
 
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
                             <span class="text-[10px] text-zinc-500">position: {{ $exhibit->position ?? 0 }}</span>

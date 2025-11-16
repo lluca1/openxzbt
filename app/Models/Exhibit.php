@@ -36,7 +36,7 @@ class Exhibit extends Model
     protected $casts = [
         'position' => 'integer',
         'layout_position' => 'array',
-        'size' => 'integer',
+        'size' => 'float',
     ];
 
     /**

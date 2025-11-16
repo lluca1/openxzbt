@@ -31,6 +31,8 @@ class ExpositionExhibits extends Component
 
     public array $comments = [];
 
+    public array $exhibitSizes = [];
+
     #[Rule('nullable|string|max:1000')]
     public string $commentBody = '';
 
@@ -41,6 +43,9 @@ class ExpositionExhibits extends Component
 
     #[Rule('nullable|string')]
     public string $description = '';
+
+    #[Rule('required|numeric|min:1|max:10')]
+    public float $size = 1.0;
 
     // Validate file presence and size via attributes; check extensions manually in save()
     #[Rule('required|file|max:512000')]
@@ -117,6 +122,9 @@ class ExpositionExhibits extends Component
             'textureFiles.*' => 'file|mimes:png,jpg,jpeg,bmp,webp|max:20480',
         ]);
 
+        $size = max(1.0, min(10.0, round((float) $this->size, 1)));
+        $this->size = $size;
+
         $position = ($this->exposition->exhibits()->max('position') ?? -1) + 1;
 
         $mimeType = $this->modelFile->getMimeType();
@@ -129,6 +137,7 @@ class ExpositionExhibits extends Component
             'media_path' => '',
             'mime_type' => $mimeType,
             'position' => $position,
+            'size' => $size,
         ]);
 
         $folder = 'models/'.$exhibit->id;
@@ -153,7 +162,7 @@ class ExpositionExhibits extends Component
 
         $exhibit->update(['media_path' => $folder]);
 
-        $this->reset(['title', 'description', 'modelFile', 'materialFile', 'textureFiles']);
+        $this->reset(['title', 'description', 'modelFile', 'materialFile', 'textureFiles', 'size']);
 
         $this->loadExhibits();
         $this->exposition->refresh();
@@ -261,7 +270,11 @@ class ExpositionExhibits extends Component
 
     private function loadExhibits(): void
     {
-        $this->exhibits = $this->exposition->exhibits()->get();
+        $collection = $this->exposition->exhibits()->get();
+        $this->exhibits = $collection;
+        $this->exhibitSizes = $collection
+            ->mapWithKeys(fn ($exhibit) => [$exhibit->id => (float) ($exhibit->size ?? 1.0)])
+            ->toArray();
     }
 
     private function loadEngagement(): void
@@ -450,5 +463,34 @@ class ExpositionExhibits extends Component
         }
 
         return $path;
+    }
+
+    public function updateExhibitSize(int $exhibitId): void
+    {
+        if (! $this->isOwner) {
+            return;
+        }
+
+        $value = $this->exhibitSizes[$exhibitId] ?? null;
+
+        if ($value === null) {
+            return;
+        }
+
+        $value = max(1.0, min(10.0, round((float) $value, 1)));
+        $this->exhibitSizes[$exhibitId] = $value;
+
+        $exhibit = $this->exposition->exhibits()->whereKey($exhibitId)->first();
+
+        if (! $exhibit) {
+            return;
+        }
+
+        if ($exhibit->size === $value) {
+            return;
+        }
+
+        $exhibit->update(['size' => $value]);
+        $this->loadExhibits();
     }
 }
