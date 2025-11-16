@@ -42,13 +42,17 @@
         {{-- HERO / TOP PANEL --}}
         <section class="border border-white/10 bg-[#0a0a0a] p-6 md:p-8">
             <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-white mb-2">
-                welcome to <span class="text-red-400">openxzbt</span>
+                welcome to<span class="text-red-400">openxzbt</span>
             </h1>
 
             @guest
                 <p class="text-sm text-white/60 max-w-xl">
                     you are exploring as <span class="text-red-400 font-semibold">guest</span>.
                     thumbnails & short previews only. log in to create & manage expositions.
+                </p>
+                <p class="text-sm text-white/60 max-w-xxl">
+                    if new to <span class="text-red-400 font-semibold">openxzbt</span>, ask yourself <span class="text-green-400 font-semibold">WHAT_IS_HERE</span> and consider registering.
+
                 </p>
             @else
                 <p class="text-sm text-white/60 max-w-xl">
