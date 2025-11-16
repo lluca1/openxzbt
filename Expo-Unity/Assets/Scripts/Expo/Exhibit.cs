@@ -9,6 +9,9 @@ public class Exhibit : Interactable
     private GameObject exhibitModel;
     private ExhibitInspector exhibitInspector;
 
+    // --- New callback for model loading ---
+    private Action onAssetLoaded;
+
     private void Start()
     {
         exhibitInspector = FindFirstObjectByType<ExhibitInspector>();
@@ -19,56 +22,68 @@ public class Exhibit : Interactable
         if (model == null)
         {
             Debug.LogError($"Setup failed: Model data was null for {exhibitData.title}");
+            onAssetLoaded?.Invoke(); // Call callback even on failure to avoid eternal loading screen
             return;
         }
 
-        // Instantiate the model as a child and store the reference
+        // ... (Model setup logic remains unchanged, which is now correctly ordered) ...
         exhibitModel = Instantiate(model, transform);
 
-        // Destroy the original loaded asset, not the instantiated one.
         Destroy(model);
 
-        ModelUtility.SetPivotToBottom(exhibitModel);
+        ModelUtility.ScaleToTargetSize(exhibitModel, exhibitData.size);
 
-        // Reset child local positions
+        exhibitModel.transform.localPosition = Vector3.zero;
+        exhibitModel.transform.localRotation = Quaternion.identity;
+
         for (int i = 0; i < exhibitModel.transform.childCount; i++)
         {
             exhibitModel.transform.GetChild(i).localPosition = Vector3.zero;
+            exhibitModel.transform.GetChild(i).localRotation = Quaternion.identity;
         }
 
-        // Apply initial scale
-        ModelUtility.ScaleToTargetSize(exhibitModel, exhibitData.size);
+        ModelUtility.SetPivotToBottom(exhibitModel);
 
         Debug.Log($"Exhibit {exhibitData.title} setup complete.");
+
+        onAssetLoaded?.Invoke(); // Signal the model loading is complete
     }
 
     public override void Interact()
     {
         base.Interact();
-        exhibitInspector.StartInspect(exhibitModel, exhibitData);
+        if (exhibitModel != null && exhibitInspector != null)
+        {
+            exhibitInspector.StartInspect(exhibitModel, exhibitData);
+        }
+        else
+        {
+            Debug.LogError("Cannot start inspection: Model or Inspector is null.");
+        }
     }
 
-    public void LoadData(ExhibitData exhibitData)
+    // --- UPDATED LoadData with Callback ---
+    public void LoadData(ExhibitData exhibitData, Action loadedCallback)
     {
         this.exhibitData = exhibitData;
+        this.onAssetLoaded = loadedCallback; // Store the callback
+
+        // Pass the internal Setup method to the data loader
         GameManager.Instance.DataLoader.LoadModel(exhibitData.media_path, exhibitData.id.ToString(), Setup);
     }
 
-    // Public method to allow ExpoManager to retrieve the current data for comparison
     public ExhibitData GetExhibitData() => exhibitData;
 
-    // Public method to update the scale dynamically
     public void UpdateScale(float newScale)
     {
         if (exhibitModel != null)
         {
-            // Update the exhibitData size to reflect the new value for future comparisons
             exhibitData.size = newScale;
 
-            // Re-run the utility function to apply the new scaling to the model object.
-            // This ensures consistent scaling logic (e.g., pivot correction) is applied 
-            // during dynamic updates as well as initial setup.
             ModelUtility.ScaleToTargetSize(exhibitModel, newScale);
+
+            ModelUtility.SetPivotToBottom(exhibitModel);
+
             Debug.Log($"Exhibit {exhibitData.title} scale updated to {newScale}.");
         }
         else

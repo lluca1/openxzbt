@@ -148,7 +148,7 @@ public class ExpoLayoutEditor : MonoBehaviour
                 exposition_id = expoData.id.ToString(),
                 type = tileTypeIndex,
                 has_exhibit = tileObject.GetComponent<PlacedTileData>().hasExhibit,
-                position = new float[] { pos.x, pos.y, pos.z },
+                position = new float[] { pos.x, 0, pos.z },
                 rotation = new float[] { rot.x, rot.y, rot.z }
             };
             tilePayload.Add(tileData);

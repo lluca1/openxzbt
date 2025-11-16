@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,9 @@ public class SceneLoader : MonoBehaviour
     public const int SCENE_INDEX_MENU = 1;
     public const int SCENE_INDEX_EXPO = 2;
     public const int SCENE_INDEX_LAYOUT_EDITOR = 3;
+
+    [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private TMP_Text progress;
 
     private static SceneLoader instance;
 
@@ -60,7 +64,20 @@ public class SceneLoader : MonoBehaviour
     public void LoadMenu()
     {
         LoadScene(SCENE_INDEX_MENU);
+
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        GameManager.Instance.AmbientController.StopAmbient();
+    }
+
+    public void ShowLoadingScreen(bool value)
+    {
+        loadingScreen.gameObject.SetActive(value);
+    }
+
+    public void UpdateProgressText(string text)
+    {
+        progress.text = text;
     }
 }

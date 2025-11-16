@@ -96,7 +96,18 @@ public class ExhibitInspector : MonoBehaviour
         inspectCamera.enabled = true;
 
         Vector3 finalSpawnOffset = new Vector3(modelSpawnOffset.x, modelSpawnOffset.y, modelSpawnOffset.z * exhibitData.size);
-        modelInstance = Instantiate(model, inspectCamera.transform.position + finalSpawnOffset, Quaternion.identity);
+        Vector3 pos = inspectCamera.transform.position + finalSpawnOffset;
+        modelInstance = Instantiate(model, pos, Quaternion.identity);
+
+        for (int i = 0; i < modelInstance.transform.childCount; i++)
+        {
+            modelInstance.transform.GetChild(i).localPosition = Vector3.zero;
+            modelInstance.transform.GetChild(i).localRotation = Quaternion.identity;
+        }
+
+        ModelUtility.CenterPivot(modelInstance);
+
+        modelInstance.transform.position = pos;
 
         modelInteractable = model.transform.parent.GetComponent<Exhibit>();
         modelInteractable.SetCanInteract(false);

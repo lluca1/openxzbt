@@ -88,6 +88,9 @@ MonoBehaviour:
   wallF: {fileID: 3953800132982334646}
   presetModelsParent: {fileID: 7463101219454331164}
   exhibitParent: {fileID: 1159065071580200140}
+  floorMaterial: {fileID: 2100000, guid: 83b47b92777cf2c4eb9ade84d7ab62a7, type: 2}
+  ceilingMaterial: {fileID: 2100000, guid: a5d248413b06c4241b8ee1e8f4257240, type: 2}
+  wallMaterial: {fileID: 2100000, guid: c5a86d7e1277d1a4ba9b865a8ff63fc8, type: 2}
 --- !u!1 &765422876608471525
 GameObject:
   m_ObjectHideFlags: 0
