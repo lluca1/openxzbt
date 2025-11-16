@@ -4,7 +4,7 @@ using System.Linq;
 
 public class DataLoader : MonoBehaviour
 {
-    private const string ASSET_HOST_URL = "https://unihack-2025-ereg-vd8nga8j.on-forge.com/storage/";
+    private const string ASSET_HOST_URL = "https://openxzbt.art/storage";
 
     private ModelLoader modelLoader;
 
@@ -31,11 +31,6 @@ public class DataLoader : MonoBehaviour
         string mtlFilename = $"{baseUrl}/{modelId}.mtl";
 
         modelLoader.LoadObj(baseUrl, objFilename, mtlFilename, onLoadedModel);
-    }
-
-    public void LoadTileData(string expoId, string tileId, Action<TileData> onLoadedTileData)
-    {
-        
     }
 
     public void LoadTexture(string expoID, Action<Texture2D> onLoadedTexture)

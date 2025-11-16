@@ -5,6 +5,7 @@ public class ExpoTile : MonoBehaviour
     [SerializeField] private Renderer floor, ceiling;
     [SerializeField] private Renderer wallL, wallR, wallB, wallF;
     [SerializeField] private Transform presetModelsParent;
+    [SerializeField] private Transform exhibitParent;
 
     private Material floorTexture, ceilingTexture, wallTexture;
 
@@ -19,7 +20,7 @@ public class ExpoTile : MonoBehaviour
         wallB.material = wallTexture;
         wallF.material = wallTexture;
 
-        wallL.gameObject.SetActive(false);
+        /*wallL.gameObject.SetActive(false);
         wallR.gameObject.SetActive(false);
         wallB.gameObject.SetActive(false);
         wallF.gameObject.SetActive(false);
@@ -42,7 +43,7 @@ public class ExpoTile : MonoBehaviour
                 wallF.gameObject.SetActive(true);
                 wallR.gameObject.SetActive(true);
                 break;
-        }
+        }*/
     }
 
     private void LoadFloorTexture(Texture2D texture)
@@ -60,7 +61,7 @@ public class ExpoTile : MonoBehaviour
         wallTexture.mainTexture = texture;
     }
 
-    public void LoadData(TileType tileType, string expoId)
+    public void LoadData(TileType tileType, string expoId, int hasExhibit)
     {
         var dataLoader = GameManager.Instance.DataLoader;
 
@@ -68,16 +69,26 @@ public class ExpoTile : MonoBehaviour
         dataLoader.LoadTexture(expoId, LoadCeilingTexture);
         dataLoader.LoadTexture(expoId, LoadWallTexture);
 
+        if (hasExhibit == 1)
+        {
+            exhibitParent.GetChild(0).gameObject.SetActive(true);
+        }
+
         Setup(tileType);
     }
 
-    public void LoadData(TileType tileType, ExpoPreset preset, int presetIndex)
+    public void LoadData(TileType tileType, ExpoPreset preset, int presetIndex, int hasExhibit)
     {
         floorTexture = preset.floorTexture;
         ceilingTexture = preset.ceilingTexture;
         wallTexture = preset.wallTexture;
 
         presetModelsParent.GetChild(presetIndex).gameObject.SetActive(true);
+
+        if (hasExhibit == 1)
+        {
+            exhibitParent.GetChild(presetIndex).gameObject.SetActive(true);
+        }
 
         Setup(tileType);
     }

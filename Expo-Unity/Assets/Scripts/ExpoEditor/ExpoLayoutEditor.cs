@@ -21,10 +21,8 @@ public class ExpoLayoutEditor : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadScene)
     {
-        // SceneLoader.SCENE_INDEX_LAYOUT_EDITOR is an assumed constant
         if (scene.buildIndex == SceneLoader.SCENE_INDEX_LAYOUT_EDITOR)
         {
-            // The layout is created after the scene loads and expoData is populated
             if (expoData != null)
             {
                 CreateLayout();
@@ -35,7 +33,7 @@ public class ExpoLayoutEditor : MonoBehaviour
     private void LoadLayout(ExpoData expoData)
     {
         this.expoData = expoData;
-        // This command should trigger OnSceneLoaded once the scene is ready
+
         GameManager.Instance.SceneLoader.LoadLayoutEditor();
     }
 
@@ -62,6 +60,8 @@ public class ExpoLayoutEditor : MonoBehaviour
             PlacedTileData dataComponent = newTile.AddComponent<PlacedTileData>();
             dataComponent.Setup((TileType)tile.type);
 
+            dataComponent.hasExhibit = tile.has_exhibit;
+
             Debug.Log($"Loaded Tile Type {(TileType)tile.type} at {pos}");
         }
 
@@ -69,7 +69,7 @@ public class ExpoLayoutEditor : MonoBehaviour
         foreach (ExhibitData exhibitData in expoData.exhibits)
         {
             GameObject exhibitPrefab = tilePlacer.GetExhibitPrefab();
-            Vector3 pos = exhibitData.GetPosition();
+            Vector3 pos = exhibitData.GetPosition() + new Vector3(0, 2, 0);
 
             GameObject newExhibit = Instantiate(exhibitPrefab, pos, Quaternion.identity);
             newExhibit.tag = "PlacedExhibit";
@@ -84,7 +84,6 @@ public class ExpoLayoutEditor : MonoBehaviour
         GameObject newSpawn = Instantiate(spawnPrefab, spawnPos, Quaternion.identity);
         newSpawn.tag = "PlayerSpawn";
 
-        // VITAL FIX: Synchronize TilePlacer's internal state with the loaded spawn point.
         tilePlacer.SetCurrentSpawnPoint(newSpawn);
 
         Debug.Log($"Loaded Player Spawn at {spawnPos}");
@@ -92,7 +91,6 @@ public class ExpoLayoutEditor : MonoBehaviour
 
     public void StartLayoutEditor(string expoId)
     {
-        // ASSUMPTION: DataLoader.LoadExpoData's callback signature is Action<ExpoData>
         GameManager.Instance.DataLoader.LoadExpoData(expoId, LoadLayout);
     }
 
@@ -119,7 +117,9 @@ public class ExpoLayoutEditor : MonoBehaviour
             TileSaveData tileData = new TileSaveData
             {
                 id = tilePayload.Count.ToString(),
+                exposition_id = expoData.id.ToString(),
                 type = tileTypeIndex,
+                has_exhibit = tileObject.GetComponent<PlacedTileData>().hasExhibit,
                 position = new float[] { pos.x, pos.y, pos.z },
                 rotation = new float[] { rot.x, rot.y, rot.z }
             };
@@ -135,7 +135,7 @@ public class ExpoLayoutEditor : MonoBehaviour
             ExhibitLayoutSaveData exhibitData = new ExhibitLayoutSaveData
             {
                 id = exhibitPayload.Count.ToString(),
-                position = new float[] { pos.x, pos.y, pos.z },
+                position = new float[] { pos.x, 0, pos.z },
                 size = 1 // Assuming size 1 if no specific component exists
             };
             exhibitPayload.Add(exhibitData);
