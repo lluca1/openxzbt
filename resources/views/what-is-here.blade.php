@@ -4,7 +4,7 @@
             <div class="flex flex-col">
                 <h2 class="text-xl font-semibold tracking-tight text-white">[?] what is here</h2>
                 <p class="text-xs text-white/40 mt-1">
-                    the slightly cursed backstage of openxzbt — downloads, warnings, and a tutorial.
+                    the practical backroom for openxzbt — builds, notices, and a concise tutorial.
                 </p>
             </div>
         </div>
@@ -14,10 +14,10 @@
         {{-- INTRO BLOCK --}}
         <div class="border border-zinc-700 bg-[#050608] rounded-none px-6 py-4">
             <p class="text-[11px] text-zinc-400 leading-relaxed">
-                this is the maintenance corridor. from here you can:
-                <span class="text-zinc-200">download the thing that pretends to be a museum,</span>
-                and <span class="text-zinc-200">watch a short tutorial so you don’t press every button in blind panic.</span>
-                no magic, just files and questionable design choices.
+                this section keeps everything you need to get the client running: the
+                <span class="text-zinc-200">latest world-loader build</span> and a
+                <span class="text-zinc-200">brief run-through</span> before you start curating.
+                nothing theatrical here—just the files and the context to use them.
             </p>
         </div>
 
@@ -30,8 +30,8 @@
                     </h3>
 
                     <p class="text-xs text-zinc-400 leading-relaxed">
-                        this is the <span class="text-zinc-200">openxzbt game build</span>.
-                        unzip it, run the executable, and you’re in the museum pretending everything is stable and intentional.
+                        grab the <span class="text-zinc-200">openxzbt desktop build</span>.
+                        unzip, run the executable, and connect to your exposition space without extra setup.
                     </p>
 
                     <div class="mt-2 text-[11px] text-zinc-500 font-mono">
@@ -52,7 +52,7 @@
                     </a>
 
                     <p class="mt-3 text-[11px] text-zinc-500">
-                        * if your operating system screams at you, that just means it cares.
+                        * signed for internal testing; expect the usual unsigned-app prompts.
                     </p>
                 </div>
             </div>
@@ -65,9 +65,9 @@
                     </h3>
 
                     <p class="text-xs text-zinc-400 leading-relaxed">
-                        a short walkthrough of <span class="text-zinc-200">how to use openxzbt</span>:
-                        creating expositions, dropping art, and not getting lost in your own museum.
-                        recommended if you like instructions more than chaos.
+                        a concise walkthrough of <span class="text-zinc-200">setting up openxzbt</span>:
+                        creating expositions, placing works, and navigating the scene without guesswork.
+                        useful when you want confirmation before going live.
                     </p>
 
                     <div class="text-[11px] text-zinc-500 font-mono">
@@ -84,14 +84,14 @@
                 </div>
 
                 <p class="mt-3 text-[11px] text-zinc-500">
-                    pro tip: go fullscreen so the ui doesn’t look like it was filmed through a keyhole.
+                    tip: go fullscreen for the clearest view of the interface.
                 </p>
             </div>
         </div>
 
         {{-- FOOTNOTE --}}
         <div class="text-[10px] text-zinc-500 text-center font-mono pt-2">
-            if anything here breaks, assume it’s an experimental feature and not a mistake.
+            if anything misbehaves, log it as an experimental constraint and let the team know.
         </div>
     </div>
 </x-app-layout>
