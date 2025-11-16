@@ -28,7 +28,7 @@ class ExpositionsManager extends Component
     public bool $is_public = true;
 
     #[Rule('integer|in:-1,0,1,2')]
-    public int $preset_theme = -1;
+    public int $preset_theme = 0;
 
     #[Rule('nullable|image|max:4096')]
     public $thumbnail;
@@ -115,7 +115,7 @@ class ExpositionsManager extends Component
             'ambient_track',
         ]);
         $this->is_public = true;
-        $this->preset_theme = -1;
+        $this->preset_theme = 0;
 
         $this->loadExpositions();
     }
