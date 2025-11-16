@@ -14,43 +14,82 @@
     use Illuminate\Support\Str;
     use App\Models\User;
 
+    // Cover image
     $coverUrl = $exposition->cover_image_path ? Storage::url($exposition->cover_image_path) : null;
-    $ordinal = str_pad((string) ($index ?? 0), 2, '0', STR_PAD_LEFT);
-    $description = $exposition->description ?: 'no description yet — add a short note.';
 
+    // Ordinal index label
+    $ordinal = str_pad((string) ($index ?? 0), 2, '0', STR_PAD_LEFT);
+
+    // Description handling
+    $description = $exposition->description ?: 'no description yet — add a short note.';
     if ($descriptionLimit) {
         $description = Str::limit($description, $descriptionLimit);
     }
 
+    // Curator handle + likes count
     $curatorHandle = '@' . ($exposition->user?->name ? Str::slug($exposition->user->name, '_') : 'anonymous');
     $likesCount = $exposition->likes_count ?? ($exposition->relationLoaded('likes') ? $exposition->likes->count() : 0);
 
-    $defaultAvatarFile = 'you-avatar-cap_on-cap_color_default-body_color_default.png';
+    // Resolve owner (DB relation fallback)
     $owner = $exposition->user;
-
     if (! $owner && auth()->check() && $exposition->user_id === auth()->id()) {
         $owner = auth()->user();
     }
-
     if (! $owner && ! empty($exposition->user_id)) {
         $owner = User::find($exposition->user_id);
     }
+    $ownerName = $owner?->name ?? 'unknown_user';
 
-    $avatarFile = $defaultAvatarFile;
+    // ---------------- AVATAR RESOLUTION ----------------
+    $defaultAvatarFile = 'you-avatar-cap_on-cap_color_default-body_color_default.png';
+    $avatarUrl = asset('assets/img/' . $defaultAvatarFile);
 
-    if ($owner && ! empty($owner->avatar)) {
-        $avatarFile = $owner->avatar;
+    $avatarUser = $owner;
+
+    if ($actionVariant === 'manage' && auth()->check()) {
+        $avatarUser = auth()->user();
+        $ownerName  = $avatarUser->name ?? $ownerName;
     }
 
-    $ownerName = $owner?->name ?? 'unknown_user';
+    if ($avatarUser) {
+        $candidate = null;
+
+        if (! empty($avatarUser->avatar_url)) {
+            $candidate = $avatarUser->avatar_url;
+        } elseif (! empty($avatarUser->avatar)) {
+            $candidate = $avatarUser->avatar;
+        } elseif (! empty($avatarUser->profile_photo_url)) {
+            $candidate = $avatarUser->profile_photo_url;
+        }
+
+        if (! empty($candidate)) {
+            if (Str::startsWith($candidate, ['http://', 'https://'])) {
+                $avatarUrl = $candidate;
+            } elseif (Str::startsWith($candidate, ['/'])) {
+                $avatarUrl = asset(ltrim($candidate, '/'));
+            } elseif (Str::startsWith($candidate, ['storage/', 'assets/', 'images/'])) {
+                $avatarUrl = asset($candidate);
+            } else {
+                $avatarUrl = asset('assets/img/' . ltrim($candidate, '/'));
+            }
+        }
+    }
+
+    // Action variant / delete mode normalization
     $actionVariant = in_array($actionVariant, ['manage', 'public'], true) ? $actionVariant : 'public';
     $deleteMode = $deleteMode === 'form' ? 'form' : 'wire';
+
+    // Manage URL
     $manageUrl = route('expositions.show', $exposition);
 @endphp
 
 <article {{ $attributes->merge(['class' => 'border border-zinc-700 hover:border-zinc-300 transition bg-[#050608] rounded-none p-4 flex flex-col gap-3']) }}>
-    <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500 overflow-hidden"
-         style="aspect-ratio: 4 / 3;">
+
+    {{-- COVER / THUMBNAIL --}}
+    <div
+        class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center text-[10px] text-zinc-500 overflow-hidden"
+        style="aspect-ratio: 4 / 3;"
+    >
         @if ($coverUrl)
             <img
                 src="{{ $coverUrl }}"
@@ -62,17 +101,21 @@
         @endif
     </div>
 
+    {{-- TITLE --}}
     <span class="text-zinc-200">
         {{ '[' . $ordinal . ']' }}
         {{ Str::upper($exposition->title) }}
     </span>
 
+    {{-- DESCRIPTION --}}
     <p class="text-[11px] text-zinc-400 line-clamp-3">
         {{ $description }}
     </p>
 
+    {{-- META --}}
     <div class="flex flex-col gap-1 text-[10px] text-zinc-500">
-        <span>curator:
+        <span>
+            curator:
             <span class="text-zinc-300">{{ $curatorHandle }}</span>
         </span>
         <span>exhibits: {{ $exposition->exhibits_count }}</span>
@@ -86,13 +129,14 @@
         </span>
     </div>
 
+    {{-- OWNER + ACTIONS --}}
     @if ($showActions)
         <div class="mt-3 flex items-center justify-between gap-3">
             @if ($showOwnerMeta)
                 <div class="flex items-center gap-2">
                     <div class="h-8 w-8 bg-[#111] border border-white/15 overflow-hidden rounded-none">
                         <img
-                            src="{{ asset('assets/img/' . $avatarFile) }}"
+                            src="{{ $avatarUrl }}"
                             alt="owner avatar"
                             class="w-full h-full object-contain"
                         >
