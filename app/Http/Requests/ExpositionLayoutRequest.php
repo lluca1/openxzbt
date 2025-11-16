@@ -31,7 +31,7 @@ class ExpositionLayoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'player_spawn' => ['nullable', 'array', 'size:3'],
+            'player_spawn' => ['required', 'array', 'size:3'],
             'player_spawn.*' => ['numeric'],
 
             'tiles' => ['required', 'array'],
