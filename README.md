@@ -1,59 +1,111 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# UniHack 2025 - Exposition Registry
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Curate, publish, and explore 3D galleries built for UniHack 2025. This Laravel 12 + Livewire 3 application lets exhibitors upload OBJ/MTL assets, configure themed virtual spaces, and gather community engagement through likes and comments.
 
-## About Laravel
+## Table of contents
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. [Highlights](#highlights)
+2. [Tech stack](#tech-stack)
+3. [Prerequisites](#prerequisites)
+4. [Quick start](#quick-start)
+5. [Local development](#local-development)
+6. [Database & storage](#database--storage)
+7. [Testing](#testing)
+8. [Project layout](#project-layout)
+9. [Troubleshooting](#troubleshooting)
+10. [License](#license)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Highlights
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Manage public or private expositions using the `ExpositionsManager` Livewire experience with preset themes and custom environment assets.
+- Upload curated exhibits with OBJ/MTL files, optional textures (up to 10), and automatic media storage per exhibit.
+- Showcase engagement through likes, threaded comments, and real-time exhibit size adjustments within `ExpositionExhibits`.
+- Discover public galleries with the type-ahead `ExpoScan` search that filters by title, creator, or numeric IDs and sorts by likes or recency.
+- Starter homepage and dashboard views powered by Laravel Breeze authentication and Tailwind-styled Volt components.
 
-## Learning Laravel
+## Tech stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Backend:** Laravel 12 (PHP 8.2), Eloquent ORM, Breeze auth scaffolding
+- **Realtime UI:** Livewire 3 + Volt, file uploads, queue-ready events
+- **Frontend tooling:** Vite 7, Tailwind CSS 3, @tailwindcss/forms
+- **Build tooling:** Composer scripts, NPM scripts, `concurrently` for unified dev loop
+- **Testing:** Pest 3 with Laravel plugin
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Prerequisites
 
-## Laravel Sponsors
+- PHP 8.2+ with `ext-fileinfo`, `ext-json`, `ext-openssl`, and SQLite/MySQL/Postgres driver of your choice
+- Composer 2.7+
+- Node.js 18+ and npm 10+
+- SQLite (bundled) or another database supported by Laravel
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Quick start
 
-### Premium Partners
+```bash
+git clone https://github.com/lluca1/unihack-2025-ereg.git
+cd unihack-2025-ereg
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
 
-## Contributing
+npm install
+npm run build   # or npm run dev for watch mode
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Update `.env` with your DB connection (defaults to SQLite) plus any mail/login providers you need before running migrations.
 
-## Code of Conduct
+## Local development
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **All-in-one loop:** `composer run dev` spins up `php artisan serve`, queue listeners, pail logs, and Vite with colored output.
+- **Manual control:**
+  - `php artisan serve` to expose the API/UI
+  - `php artisan queue:listen --tries=1` for background jobs if you enable them later
+  - `npm run dev` for hot module reload via Vite
 
-## Security Vulnerabilities
+Default routes:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- `/` - Public landing page with featured expositions
+- `/dashboard` - Auth-only hub
+- `/expositions` - CRUD surface for a curator's own galleries
+- `/expositions/{id}` - Exhibit workspace with uploads, likes, comments, and environment controls
+
+## Database & storage
+
+- Run `php artisan migrate --seed` after configuring the database. The seeder creates a demo `test@example.com` account for quick sign-in.
+- File uploads are stored on the `public` disk (`storage/app/public`). Make sure `php artisan storage:link` is executed so `public/storage` serves assets.
+- Model uploads enforce the following caps:
+  - OBJ: `max:512000` (approx 500 MB)
+  - MTL: `max:51200` (approx 50 MB)
+  - Textures: up to 10 x 20 MB each (`png|jpg|jpeg|bmp|webp`)
+  - Ambient audio: 30 MB (`mp3|wav|ogg|flac|m4a`)
+
+## Testing
+
+```bash
+php artisan test          # Runs the Laravel test suite
+./vendor/bin/pest         # Direct Pest runner with watch/coverage options
+```
+
+Before pushing changes, clear compiled config for parity with CI: `php artisan config:clear`.
+
+## Project layout
+
+- `app/Livewire/ExpositionsManager.php` - CRUD for expositions, uploads for thumbnails + environment textures
+- `app/Livewire/ExpositionExhibits.php` - Exhibit upload pipeline, interactions, likes/comments, and environment controls
+- `app/Livewire/ExpoScan.php` - Public search experience for curated spaces
+- `routes/web.php` - Home, dashboard, exposition, and auth routes (Breeze)
+- `resources/views/` - Blade templates for landing pages plus Livewire views under `livewire/`
+- `database/migrations/` - Schema for expositions, exhibits, interactions, and tile layouts
+
+## Troubleshooting
+
+- **Missing media:** Re-run `php artisan storage:link` and confirm the web server can serve `public/storage`.
+- **Large uploads failing:** Check PHP `upload_max_filesize` / `post_max_size` and ensure they exceed the Livewire validators listed above.
+- **Queues not processing:** Start `php artisan queue:work` or `composer run dev` so Livewire uploads and notifications can finish.
+- **Database reset:** Use `php artisan migrate:fresh --seed` during local iterations.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Released under the [GPL-3.0 License](LICENSE). See the license file for details.
