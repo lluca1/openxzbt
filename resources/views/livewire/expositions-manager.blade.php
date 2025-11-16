@@ -235,7 +235,7 @@
                 <div class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-3">
                     <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">notes</h2>
                     <p class="text-[11px] text-zinc-400">
-                        the 3d client points here using your exposition id. deleting an exposition removes its 3d references.
+                        the 3d client points here using your exposition id.
                     </p>
                 </div>
             </aside>
