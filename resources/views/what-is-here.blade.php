@@ -77,10 +77,14 @@
                 </div>
 
                 <div class="aspect-video w-full bg-black/60">
-                    <video controls class="w-full h-full">
-                        <source src="{{ asset('storage/what_is_here/openxzbt_tutorial.mp4') }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    <iframe
+                        class="w-full h-full"
+                        src="https://www.youtube.com/embed/BrlwSAzDLOw"
+                        title="openxzbt tutorial"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                    ></iframe>
                 </div>
 
                 <p class="mt-3 text-[11px] text-zinc-500">
