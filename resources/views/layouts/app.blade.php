@@ -138,7 +138,7 @@
                         @endauth
 
                         {{-- AVATAR --}}
-                        <div class="h-12 w-12 bg-[#111] flex items-center justify-center overflow-hidden rounded-none">
+                        <div class="h-12 w-12 bg-[#111] flex items-center justify-center overflow-hidden rounded-none border border-white/30">
                             <img
                                 src="{{ asset('assets/img/you-avatar.png') }}"
                                 alt="avatar"
