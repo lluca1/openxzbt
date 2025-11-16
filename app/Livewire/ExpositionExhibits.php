@@ -340,4 +340,5 @@ class ExpositionExhibits extends Component
 
         return $userId;
     }
+
 }
