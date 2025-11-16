@@ -16,9 +16,9 @@ class ExpositionLayoutController extends Controller
      */
     public function update(ExpositionLayoutRequest $request, Exposition $exposition): JsonResponse
     {
-        if (Auth::id() !== $exposition->user_id) {
-            abort(403);
-        }
+        // if (Auth::id() !== $exposition->user_id) {
+        //     abort(403);
+        // }
 
         $data = $request->validated();
 
