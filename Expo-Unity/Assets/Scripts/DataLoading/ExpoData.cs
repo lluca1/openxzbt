@@ -20,7 +20,8 @@ public class CuratorData
 [Serializable]
 public class TileData
 {
-    public string tileId;
+    public string id;
+    public string exposition_id;
     public int type;
     public float[] position;
     public float[] rotation;
@@ -44,16 +45,17 @@ public class TileData
 public class ExhibitData
 {
     public int id;
+    public int exposition_id;
     public string title;
     public string description;
     public string media_path;
-    public float[] layout_position;
-    public int size;
+    public float[] position;
+    public float size;
 
     public Vector3 GetPosition()
     {
-        if (layout_position != null && layout_position.Length >= 3)
-            return new Vector3(layout_position[0], layout_position[1], layout_position[2]);
+        if (position != null && position.Length >= 3)
+            return new Vector3(position[0], position[1], position[2]);
         return Vector3.zero;
     }
 }
@@ -78,6 +80,7 @@ public class ExpoData
     public List<ExhibitData> exhibits;
     public List<TileData> tiles;
 
+    // Custom data
     public string floor_texture;
     public string ceiling_texture;
     public string wall_texture;

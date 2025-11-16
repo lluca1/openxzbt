@@ -110,11 +110,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExpoTile
   floor: {fileID: 1159874978701496299}
   ceiling: {fileID: 9011497197932402536}
-  walls:
-  - {fileID: 5170082757227876672}
-  - {fileID: 1555072190773588083}
-  - {fileID: 5053224083212785090}
-  - {fileID: 3953800132982334646}
+  wallL: {fileID: 5170082757227876672}
+  wallR: {fileID: 1555072190773588083}
+  wallB: {fileID: 5053224083212785090}
+  wallF: {fileID: 3953800132982334646}
   presetModelsParent: {fileID: 7463101219454331164}
 --- !u!1 &765422876608471525
 GameObject:

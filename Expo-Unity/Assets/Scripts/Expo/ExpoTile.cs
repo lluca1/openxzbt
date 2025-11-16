@@ -27,19 +27,19 @@ public class ExpoTile : MonoBehaviour
         switch (tileType)
         {
             case TileType.I:
-                wallL.gameObject.SetActive(true);
+                wallR.gameObject.SetActive(true);
                 break;
             case TileType.II:
                 wallL.gameObject.SetActive(true);
                 wallR.gameObject.SetActive(true);
                 break;
             case TileType.L:
-                wallL.gameObject.SetActive(true);
-                wallB.gameObject.SetActive(true);
+                wallR.gameObject.SetActive(true);
+                wallF.gameObject.SetActive(true);
                 break;
             case TileType.U:
                 wallL.gameObject.SetActive(true);
-                wallB.gameObject.SetActive(true);
+                wallF.gameObject.SetActive(true);
                 wallR.gameObject.SetActive(true);
                 break;
         }

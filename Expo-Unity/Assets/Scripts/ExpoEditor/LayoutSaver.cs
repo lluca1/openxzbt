@@ -6,12 +6,24 @@ using System.IO;
 
 public class LayoutSaver : MonoBehaviour
 {
+    private string expoId;
+
     private TilePlacer tilePlacer;
 
     private void Awake()
     {
         tilePlacer = FindFirstObjectByType<TilePlacer>();
     }
+
+   /* private void LoadLayout()
+    {
+        GameManager.Instance.DataLoader.LoadExpoData(expoId, LoadExpo);
+    }
+
+    public void StartExpoEditor(string expoId)
+    {
+        this.expoId = expoId;
+    }*/
 
     public void SaveLayout(int expoId)
     {
