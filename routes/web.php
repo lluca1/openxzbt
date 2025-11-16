@@ -29,6 +29,9 @@ Route::get('/', function () {
     return view('home', compact('expositions'));
 })->name('home');
 
+// Temporary tutorial / game download page
+Route::view('/what-is-here', 'what-is-here')->name('what.is.here');
+
 
 /*
 |--------------------------------------------------------------------------

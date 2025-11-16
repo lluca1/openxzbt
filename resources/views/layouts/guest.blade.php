@@ -56,7 +56,7 @@
                         }
                     @endphp
 
-                    {{-- CENTER: HOME + SIGN UP (ABSOLUTE TRUE CENTER) --}}
+                    {{-- CENTER: HOME + SIGN UP + WHAT IS HERE --}}
                     <nav class="hidden md:flex items-center gap-2 text-xs absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
 
                         {{-- HOME --}}
@@ -65,13 +65,22 @@
                             [*] HOME
                         </a>
 
-                        {{-- SIGN UP --}}
+                        {{-- SIGN UP (YELLOW ACTIVE) --}}
                         <a href="{{ route('register') }}"
                            class="px-3 py-1 border tracking-tight rounded-none transition
                                   {{ request()->routeIs('register')
-                                        ? 'border-[#22c55e]/70 bg-[#052713] text-[#bbf7d0]'
+                                        ? 'border-[#facc15]/90 bg-[#26220b] text-[#fef3c7]'
                                         : 'border-white/30 text-white/60 hover:text-white' }}">
                             [+] SIGN_UP
+                        </a>
+
+                        {{-- WHAT IS HERE --}}
+                        <a href="{{ route('what.is.here') }}"
+                           class="px-3 py-1 border tracking-tight rounded-none transition
+                                  {{ request()->routeIs('what.is.here')
+                                        ? 'border-[#22c55e]/70 bg-[#052713] text-[#bbf7d0]'
+                                        : 'border-white/30 text-white/60 hover:text-white' }}">
+                            [?] WHAT_IS_HERE
                         </a>
 
                     </nav>

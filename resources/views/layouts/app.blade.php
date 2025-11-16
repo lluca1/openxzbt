@@ -30,6 +30,8 @@
                                 home
                             @elseif(request()->routeIs('profile'))
                                 profile_editor
+                            @elseif(request()->routeIs('what.is.here'))
+                                what_is_here
                             @else
                                 3d_exposition_index
                             @endif
@@ -60,7 +62,7 @@
                         }
                     @endphp
 
-                    {{-- CENTER NAV (HOME + SIGN UP) --}}
+                    {{-- CENTER NAV --}}
                     <div class="flex-1 flex justify-center">
                         @if(request()->routeIs('login') || request()->routeIs('register'))
                             <nav class="hidden md:flex items-center gap-2 text-xs">
@@ -71,18 +73,27 @@
                                     [*] HOME
                                 </a>
 
-                                {{-- SIGN UP --}}
+                                {{-- SIGN UP (YELLOW ACTIVE) --}}
                                 <a href="{{ route('register') }}"
                                    class="px-3 py-1 border tracking-tight rounded-none transition
                                           {{ request()->routeIs('register')
-                                                ? 'border-[#22c55e]/70 bg-[#052713] text-[#bbf7d0]'
+                                                ? 'border-[#facc15]/90 bg-[#26220b] text-[#fef3c7]'
                                                 : 'border-white/30 text-white/60 hover:text-white' }}">
                                     [+] SIGN_UP
                                 </a>
 
+                                {{-- WHAT IS HERE (always visible on auth screens) --}}
+                                <a href="{{ route('what.is.here') }}"
+                                   class="px-3 py-1 border tracking-tight rounded-none transition
+                                          {{ request()->routeIs('what.is.here')
+                                                ? 'border-[#22c55e]/70 bg-[#052713] text-[#bbf7d0]'
+                                                : 'border-white/30 text-white/60 hover:text-white' }}">
+                                    [?] WHAT_IS_HERE
+                                </a>
+
                             </nav>
                         @else
-                            {{-- NORMAL NAVIGATION FOR THE REST OF THE SITE --}}
+                            {{-- NORMAL NAV FOR REST OF SITE --}}
                             <nav class="hidden md:flex items-center gap-2 text-xs">
 
                                 {{-- HOME --}}
@@ -91,13 +102,13 @@
                                     [*] HOME
                                 </a>
 
-                                {{-- CREATE EXPOSITION ALWAYS VISIBLE --}}
+                                {{-- CREATE EXPOSITION --}}
                                 <a href="{{ auth()->check() ? route('dashboard') : route('login') }}"
                                    class="px-3 py-1 border tracking-tight rounded-none transition {{ $nav('dashboard') }}">
                                     [+] CREATE_EXPOSITION
                                 </a>
 
-                                {{-- PROFILE --}}
+                                {{-- PROFILE (auth only) --}}
                                 @auth
                                 <a href="{{ route('profile') }}"
                                    class="px-3 py-1 border tracking-tight rounded-none transition
@@ -108,11 +119,20 @@
                                 </a>
                                 @endauth
 
+                                {{-- WHAT IS HERE (visible for both guest + auth) --}}
+                                <a href="{{ route('what.is.here') }}"
+                                   class="px-3 py-1 border tracking-tight rounded-none transition
+                                          {{ request()->routeIs('what.is.here')
+                                                ? 'border-[#22c55e]/70 bg-[#052713] text-[#bbf7d0]'
+                                                : 'border-white/30 text-white/60 hover:text-white' }}">
+                                    [?] WHAT_IS_HERE
+                                </a>
+
                             </nav>
                         @endif
                     </div>
 
-                    {{-- RIGHT SIDE: LOGIN / LOGOUT / AVATAR --}}
+                    {{-- RIGHT SIDE --}}
                     <div class="flex items-center gap-3 text-xs flex-none">
 
                         @auth
@@ -134,7 +154,7 @@
                             </form>
 
                         @else
-                            {{-- LOGIN BUTTON (not on login/register) --}}
+                            {{-- LOGIN --}}
                             @if(!request()->routeIs('login') && !request()->routeIs('register'))
                                 <a href="{{ route('login') }}"
                                    class="px-4 py-4 text-xs text-white border border-white/30 bg-[#141414] hover:bg-[#1e1e1e] rounded-none">
@@ -158,8 +178,6 @@
                 </div>
             </header>
 
-
-
             <main class="flex-1 pt-28 pb-12">
                 {{ $slot }}
             </main>
@@ -168,14 +186,12 @@
             <footer class="border-t border-zinc-800 py-6 text-[11px] text-white/60">
                 <div class="max-w-6xl mx-auto px-6 flex flex-col items-center gap-4 text-center">
 
-                    {{-- SHORT DESCRIPTION --}}
                     <p class="max-w-2xl text-white/50 leading-relaxed">
                         openxzbt is a minimal web console for creating and managing 3D art expositions.
                         artwork metadata and layout live here — the actual museum is generated and explored
                         inside the unity viewer.
                     </p>
 
-                    {{-- COLORED STATUS TAGS --}}
                     <div class="flex flex-wrap justify-center gap-3">
                         <span class="px-3 py-1 border border-[#38bdf8]/70 bg-[#072635] rounded-none">
                             endpoint: /expositions
@@ -192,7 +208,7 @@
                         <span class="px-3 py-1 border border-[#f97373]/70 bg-[#5b1010] rounded-none">
                             unity_client_required
                         </span>
-                    </div
+                    </div>
                 </div>
             </footer>
 

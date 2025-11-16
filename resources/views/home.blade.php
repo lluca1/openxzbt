@@ -13,17 +13,25 @@
                 </p>
             </div>
 
-            @auth
-                <a href="{{ route('expositions.index') }}"
-                    class="px-4 py-1 border border-[#facc15]/60 bg-[#26220b] text-[#fef3c7] text-xs tracking-tight">
-                    [+] CREATE_EXPOSITION
+            <div class="flex items-center gap-2">
+                @auth
+                    <a href="{{ route('expositions.index') }}"
+                       class="px-4 py-1 border border-[#facc15]/60 bg-[#26220b] text-[#fef3c7] text-xs tracking-tight">
+                        [+] CREATE_EXPOSITION
+                    </a>
+                @else
+                    <a href="{{ route('login') }}"
+                       class="px-4 py-1 border border-white/30 bg-[#141414] text-white text-xs hover:bg-[#1e1e1e]">
+                        LOGIN TO CREATE
+                    </a>
+                @endauth
+
+                {{-- WHAT IS HERE SHORTCUT --}}
+                <a href="{{ route('what.is.here') }}"
+                   class="px-4 py-1 border border-[#22c55e]/70 bg-[#052713] text-[#bbf7d0] text-xs tracking-tight">
+                    [?] WHAT_IS_HERE
                 </a>
-            @else
-                <a href="{{ route('login') }}"
-                    class="px-4 py-1 border border-white/30 bg-[#141414] text-white text-xs hover:bg-[#1e1e1e]">
-                    LOGIN TO CREATE
-                </a>
-            @endauth
+            </div>
         </div>
     </x-slot>
 
@@ -50,38 +58,35 @@
             @endguest
 
             @php
-    $tips = [
-        'check your scale.',
-        'normals are wrong. they always are.',
-        'lighting fixes more than modeling does.',
-        'don’t trust viewport shading.',
-        'your scene has too many lights.',
-        'reduce your textures. you won’t notice.',
-        'test it in low light before calling it done.',
-        'glass is never as simple as you think.',
-        'your camera is probably in the wrong place.',
-        'bake it. then bake it again.',
-        'overdetailing is not detail.',
-        'your shadows are too soft.',
-        'stop smoothing everything.',
-        'check the silhouette, not the surface.',
-        'remove half your polygons. it will look the same.',
-        'reflections lie.',
-        'check the backfaces. someone will see them.',
-        'texture seams always find an audience.',
-        'realism starts with roughness.',
-        'your color grading is doing the heavy lifting.',
-    ];
+                $tips = [
+                    'check your scale.',
+                    'normals are wrong. they always are.',
+                    'lighting fixes more than modeling does.',
+                    'don’t trust viewport shading.',
+                    'your scene has too many lights.',
+                    'reduce your textures. you won’t notice.',
+                    'test it in low light before calling it done.',
+                    'glass is never as simple as you think.',
+                    'your camera is probably in the wrong place.',
+                    'bake it. then bake it again.',
+                    'overdetailing is not detail.',
+                    'your shadows are too soft.',
+                    'stop smoothing everything.',
+                    'check the silhouette, not the surface.',
+                    'remove half your polygons. it will look the same.',
+                    'reflections lie.',
+                    'check the backfaces. someone will see them.',
+                    'texture seams always find an audience.',
+                    'realism starts with roughness.',
+                    'your color grading is doing the heavy lifting.',
+                ];
 
-    $tip = $tips[array_rand($tips)];
-@endphp
+                $tip = $tips[array_rand($tips)];
+            @endphp
 
-<div class="mt-4 inline-flex items-center gap-2 px-3 py-1 border border-white/20 bg-[#111] text-[10px] text-white/50">
-    tip: {{ $tip }}
-</div>
-
-
-
+            <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 border border-white/20 bg-[#111] text-[10px] text-white/50">
+                tip: {{ $tip }}
+            </div>
         </section>
 
         {{-- SCAN FOR EXPOS@ (LIVEWIRE SEARCH) --}}
@@ -125,8 +130,7 @@
                                             @method('DELETE')
                                             <button
                                                 type="submit"
-                                                class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]"
-                                            >
+                                                class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]">
                                                 :: DELETE
                                             </button>
                                         </form>
