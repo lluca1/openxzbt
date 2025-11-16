@@ -15,6 +15,7 @@ class ExpositionController extends Controller
     {
         $exposition->load([
             'user:id,name,email',
+            'tiles',
             'exhibits' => function ($query) {
                 $query->orderBy('position');
             },
