@@ -16,8 +16,6 @@ class ExpositionResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'cover_image_path' => $this->cover_image_path,
-            'is_public' => $this->is_public,
             'preset_theme' => $this->preset_theme,
             'created_at' => optional($this->created_at)->toIso8601String(),
             'updated_at' => optional($this->updated_at)->toIso8601String(),
