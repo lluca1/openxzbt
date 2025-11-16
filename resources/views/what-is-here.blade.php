@@ -41,7 +41,7 @@
 
                 <div class="mt-6">
                     <a
-                        href="{{ asset('storage/what_is_here/openxzbt_client.zip') }}"
+                        href="https://github.com/lluca1/unihack-2025-ereg/blob/game-dev/xzbt.zip"
                         download
                         class="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium uppercase tracking-wide
                                border border-[#facc15]/60 bg-[#facc15]/10 text-[#facc15]
