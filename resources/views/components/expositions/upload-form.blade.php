@@ -38,7 +38,7 @@
                 type="file"
                 wire:model="modelFile"
                 accept=".obj"
-                class="w-full text-[11px] file:mr-3 file:px-3 file:py-1 file:border-0 file:bg-[#072635] file:text-[#bae6fd] file:rounded-none border border-dashed border-zinc-700 bg-[#050608] text-zinc-400"
+                class="input-file-fancy"
             >
             @error('modelFile')
                 <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
@@ -53,7 +53,7 @@
                 type="file"
                 wire:model="materialFile"
                 accept=".mtl"
-                class="w-full text-[11px] file:mr-3 file:px-3 file:py-1 file:border-0 file:bg-[#072635] file:text-[#bae6fd] file:rounded-none border border-dashed border-zinc-700 bg-[#050608] text-zinc-400"
+                class="input-file-fancy"
             >
             @error('materialFile')
                 <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
@@ -69,7 +69,7 @@
                 wire:model="textureFiles"
                 multiple
                 accept=".png,.jpg,.jpeg,.bmp,.webp"
-                class="w-full text-[11px] file:mr-3 file:px-3 file:py-1 file:border-0 file:bg-[#072635] file:text-[#bae6fd] file:rounded-none border border-dashed border-zinc-700 bg-[#050608] text-zinc-400"
+                class="input-file-fancy"
             >
             @error('textureFiles')
                 <p class="text-[10px] text-[#f97373]">{{ $message }}</p>

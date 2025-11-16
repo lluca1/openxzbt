@@ -7,3 +7,14 @@
 body {
 	font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
+
+@layer components {
+	.input-file-fancy {
+		@apply w-full text-[11px] px-3 py-2 text-zinc-300 border border-dashed border-zinc-700 bg-[#050608] outline-none transition rounded-none;
+		@apply hover:border-zinc-500 focus:border-zinc-400;
+	}
+
+	.input-file-fancy::file-selector-button {
+		@apply mr-3 px-3 py-1.5 border-0 bg-[#072635] text-[#bae6fd] uppercase tracking-[0.2em] rounded-none cursor-pointer font-semibold transition duration-200;
+	}
+}

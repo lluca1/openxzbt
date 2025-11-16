@@ -35,7 +35,7 @@
                             type="file"
                             accept="image/*"
                             wire:model="thumbnail"
-                            class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                            class="input-file-fancy"
                         >
                         <p class="text-[10px] text-zinc-500">4:3 aspect ratio. max 4 MB.</p>
                         @error('thumbnail')
@@ -78,7 +78,7 @@
                                     type="file"
                                     accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
                                     wire:model="floor_texture"
-                                    class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                    class="input-file-fancy"
                                 >
                                 <p class="text-[10px] text-zinc-500">stored under /storage/textures/[expo id]/floor-*. recommended 2k square.</p>
                                 @error('floor_texture')
@@ -94,7 +94,7 @@
                                     type="file"
                                     accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
                                     wire:model="ceiling_texture"
-                                    class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                    class="input-file-fancy"
                                 >
                                 <p class="text-[10px] text-zinc-500">stored under /storage/textures/[expo id]/ceiling-*.</p>
                                 @error('ceiling_texture')
@@ -110,7 +110,7 @@
                                     type="file"
                                     accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
                                     wire:model="wall_texture"
-                                    class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                    class="input-file-fancy"
                                 >
                                 <p class="text-[10px] text-zinc-500">stored under /storage/textures/[expo id]/wall-*.</p>
                                 @error('wall_texture')
@@ -126,7 +126,7 @@
                                     type="file"
                                     accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a"
                                     wire:model="ambient_track"
-                                    class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                    class="input-file-fancy"
                                 >
                                 <p class="text-[10px] text-zinc-500">saved to /storage/audio/[expo id]/ambient-*.</p>
                                 @error('ambient_track')

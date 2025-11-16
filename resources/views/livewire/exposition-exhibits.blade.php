@@ -137,7 +137,7 @@
                             type="file"
                             accept="image/*"
                             wire:model="thumbnail"
-                            class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                            class="input-file-fancy"
                         >
 
                         <p class="text-[10px] text-zinc-500">
@@ -246,7 +246,7 @@
                                         type="file"
                                         accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
                                         wire:model="floorTextureUpload"
-                                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-400 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                        class="input-file-fancy"
                                     >
                                     <p class="text-[10px] text-zinc-500">
                                         current:
@@ -275,7 +275,7 @@
                                         type="file"
                                         accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
                                         wire:model="ceilingTextureUpload"
-                                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-400 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                        class="input-file-fancy"
                                     >
                                     <p class="text-[10px] text-zinc-500">
                                         current:
@@ -304,7 +304,7 @@
                                         type="file"
                                         accept="image/png,image/jpeg,image/jpg,image/webp,image/avif,image/bmp"
                                         wire:model="wallTextureUpload"
-                                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-400 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                        class="input-file-fancy"
                                     >
                                     <p class="text-[10px] text-zinc-500">
                                         current:
@@ -333,7 +333,7 @@
                                         type="file"
                                         accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a"
                                         wire:model="ambientTrackUpload"
-                                        class="w-full bg-[#050608] border border-dashed border-zinc-700 focus:border-zinc-400 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100"
+                                        class="input-file-fancy"
                                     >
                                     <p class="text-[10px] text-zinc-500">
                                         current:
