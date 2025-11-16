@@ -13,6 +13,11 @@ class ExpoScan extends Component
     public string $query = '';
 
     /**
+     * The sort order: 'likes' or 'recent'
+     */
+    public string $sortBy = 'likes';
+
+    /**
      * Clear the search box.
      */
     public function resetSearch(): void
@@ -57,16 +62,25 @@ class ExpoScan extends Component
             }
 
             if ($builder) {
-                $results = $builder
-                    ->orderByDesc('created_at')
-                    ->limit(10)
-                    ->get();
+                // Always load likes + exhibits count for sorting and display
+                $builder->withCount(['likes', 'exhibits']);
+
+                // Apply sort order
+                if ($this->sortBy === 'recent') {
+                    $builder->orderByDesc('created_at');
+                } else {
+                    // Default to likes (popularity)
+                    $builder->orderByDesc('likes_count');
+                }
+
+                $results = $builder->limit(10)->get();
             }
         }
 
         return view('livewire.expo-scan', [
             'results' => $results,
             'query'   => $this->query,
+            'sortBy'  => $this->sortBy,
         ]);
     }
 }
