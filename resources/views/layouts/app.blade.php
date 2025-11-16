@@ -31,7 +31,7 @@
                             @elseif(request()->routeIs('profile'))
                                 profile_editor
                             @else
-                                3d_exposition_index
+                                exposition_manager
                             @endif
                         </span>
                     </div>

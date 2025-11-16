@@ -319,8 +319,9 @@
         </div>
     @endif
 
-    {{-- OTHER USERS' EXPOSITIONS (VIEW-ONLY) --}}
-    @if ($otherExpositions->isNotEmpty())
+
+    {{-- OTHER USERS' EXPOSTIONS --}}
+    {{-- @if ($otherExpositions->isNotEmpty())
         <div class="mt-10">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-sm font-semibold tracking-tight text-zinc-100">other expositions</h2>
@@ -374,7 +375,7 @@
                 @endforeach
             </div>
         </div>
-    @endif
+    @endif --}}
 
     @if ($yourExpositions->isEmpty() && $otherExpositions->isEmpty())
         <div class="border border-dashed border-zinc-700 rounded-none p-6 text-center text-[12px] text-zinc-400 mt-8">
