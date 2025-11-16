@@ -34,7 +34,7 @@ public class SceneLoader : MonoBehaviour
 
     private void Start()
     {
-        LoadMenu();
+        //LoadMenu();
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)

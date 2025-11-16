@@ -48,7 +48,6 @@ public class ExpoManager : MonoBehaviour
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        InputManager.Controls.Player.Cancel.performed -= (ctx) => Exit();
         StopAllCoroutines();
     }
 
@@ -56,8 +55,6 @@ public class ExpoManager : MonoBehaviour
     {
         if (scene.buildIndex == SceneLoader.SCENE_INDEX_EXPO)
         {
-            InputManager.Controls.Player.Cancel.performed += (ctx) => Exit();
-
             CreateExpo();
             StartCoroutine(UpdateExhibitDataPeriodically());
         }
@@ -215,11 +212,6 @@ public class ExpoManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void Exit()
-    {
-        GameManager.Instance.SceneLoader.LoadMenu();
     }
 
     public void StartLoadExpo(string id)

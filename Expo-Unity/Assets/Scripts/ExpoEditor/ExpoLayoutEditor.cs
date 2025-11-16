@@ -195,11 +195,35 @@ public class ExpoLayoutEditor : MonoBehaviour
 
         string jsonData = JsonUtility.ToJson(payload);
 
+        SaveJsonToAssetsFolder(jsonData);
+
         string endpoint = $"{expoData.id}/layout";
 
         string sanctumToken = "";
-        // Assuming ServerCommunicator is correctly set up
+
         ServerCommunicator.Instance.PutRequest(endpoint, jsonData, OnLayoutSaveComplete, sanctumToken);
+    }
+
+    private void SaveJsonToAssetsFolder(string jsonData)
+    {
+        // Application.dataPath points to the Assets folder in the Unity Editor
+        string path = Path.Combine(Application.dataPath, "layout");
+
+        try
+        {
+            // Write the JSON string to the file.
+            File.WriteAllText(path, jsonData);
+            Debug.Log($"\u2705 Layout JSON saved locally to: {path}");
+
+            // NOTE: In the editor, you might need to call AssetDatabase.Refresh()
+            // for the new file to show up immediately in the Project window, 
+            // but this is not available in builds and can be slow. 
+            // The file is physically saved regardless.
+        }
+        catch (IOException ex)
+        {
+            Debug.LogError($"\u274C Failed to save local JSON file to Assets: {ex.Message}");
+        }
     }
 
     private void OnLayoutSaveComplete(bool success, string jsonResponse, string error)
