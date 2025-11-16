@@ -39,7 +39,7 @@ public class TilePlacer : MonoBehaviour
     private bool isPlacingExhibit = false;
     private bool isPlancingSpawn = false;
 
-    private GameObject currentSpawnPoint;
+    private GameObject currentSpawnPoint; // This needs to be set on load
 
     private Plane placementPlane;
     private GameObject initialTile;
@@ -472,5 +472,35 @@ public class TilePlacer : MonoBehaviour
         }
 
         return false;
+    }
+
+    // START OF FIX: Public accessors and setter
+    public GameObject GetTilePrefab(TileType type)
+    {
+        return type switch
+        {
+            TileType.Empty => empty,
+            TileType.I => I,
+            TileType.II => II,
+            TileType.L => L,
+            TileType.U => U,
+            _ => empty,
+        };
+    }
+
+    public GameObject GetExhibitPrefab() => exhibitPrefab;
+
+    public GameObject GetPlayerSpawnPrefab() => playerSpawnPrefab;
+
+    // FIX: Method to set the internal spawn point reference on load
+    public void SetCurrentSpawnPoint(GameObject spawnObject)
+    {
+        currentSpawnPoint = spawnObject;
+        Debug.Log("TilePlacer's currentSpawnPoint reference synchronized after load.");
+    }
+
+    public void SaveLayout()
+    {
+        GameManager.Instance.ExpoLayoutEditor.SaveLayout();
     }
 }

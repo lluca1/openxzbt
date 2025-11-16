@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2101266152501866195}
   - component: {fileID: 819035687202426259}
   - component: {fileID: 8372881568834962691}
+  - component: {fileID: 3821242429464005908}
   m_Layer: 0
   m_Name: GLOBAL MANAGERS
   m_TagString: Untagged
@@ -103,23 +104,38 @@ MonoBehaviour:
   exhibitPrefab: {fileID: 3467540078235444993, guid: e0c1520183baae1448b266dd4fe54766, type: 3}
   playerSpawnOffset: {x: 0, y: 1, z: 0}
   tileSpawnOffset: {x: 0, y: 0, z: 3}
+  exhibitSpawnOffset: {x: 0, y: 0, z: 0}
   expoId: 
   expoData:
     id: 0
     title: 
     description: 
-    cover_image_path: 
-    is_public: 0
-    created_at: 
-    updated_at: 
+    preset_theme: 0
+    spawnpoint: []
     curator:
       id: 0
       name: 
       email: 
     exhibits: []
+    tiles: []
+    floor_texture: 
+    ceiling_texture: 
+    wall_texture: 
+    ambient_track: 
     meta:
       exhibits_count: 0
-  exhibitIds: []
+--- !u!114 &3821242429464005908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018958099651161952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 903900e611ad3a3418638517641058c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LayoutSaver
 --- !u!1 &3469632758968148351
 GameObject:
   m_ObjectHideFlags: 0

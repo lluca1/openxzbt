@@ -48,7 +48,7 @@ public class DataLoader : MonoBehaviour
 
     }
 
-    public void LoadExpoData(string expoID, Action<ExpoData> onLoadedExpoData)
+    public void LoadExpoData(string expoID, Action<ExpoData> onexpoData)
     {
         string endpoint = $"{expoID}";
 
@@ -60,19 +60,19 @@ public class DataLoader : MonoBehaviour
                 {
                     ExpoRootData expoRootData = JsonUtility.FromJson<ExpoRootData>(jsonResponse);
 
-                    onLoadedExpoData?.Invoke(expoRootData.data);
+                    onexpoData?.Invoke(expoRootData.data);
                     Debug.Log($"Successfully loaded Expo configuration: {expoRootData.data.title}");
                 }
                 catch (Exception e)
                 {
                     Debug.LogError($"Error deserializing Expo JSON: {e.Message}");
-                    onLoadedExpoData?.Invoke(null);
+                    onexpoData?.Invoke(null);
                 }
             }
             else
             {
                 Debug.LogError($"Failed to download Expo data from {endpoint}: {error}");
-                onLoadedExpoData?.Invoke(null);
+                onexpoData?.Invoke(null);
             }
         });
     }

@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.SceneManagement;
-using static UnityEditor.PlayerSettings;
 
 public class ExpoManager : MonoBehaviour
 {
@@ -18,7 +15,6 @@ public class ExpoManager : MonoBehaviour
     [SerializeField] private Vector3 exhibitSpawnOffset;
 
     [Header("Debug")]
-    [SerializeField] private string expoId;
     [SerializeField] private ExpoData expoData;
 
     private List<ExpoTile> createdTiles = new();
@@ -89,7 +85,7 @@ public class ExpoManager : MonoBehaviour
             }
             else
             {
-                newTile.LoadData(tileType, expoId);
+                newTile.LoadData(tileType, expoData.id.ToString());
             }
 
             createdTiles.Add(newTile);
@@ -116,8 +112,6 @@ public class ExpoManager : MonoBehaviour
 
     public void StartLoadExpo(string id)
     {
-        expoId = id;
-
-        GameManager.Instance.DataLoader.LoadExpoData(expoId, LoadExpo);
+        GameManager.Instance.DataLoader.LoadExpoData(id, LoadExpo);
     }
 }
