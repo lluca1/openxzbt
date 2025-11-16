@@ -46,7 +46,7 @@ class ExpositionLayoutRequest extends FormRequest
             'exhibits' => ['required', 'array'],
             'exhibits.*.position' => ['required', 'array', 'size:3'],
             'exhibits.*.position.*' => ['numeric'],
-            'exhibits.*.size' => ['required', 'integer', 'min:0'],
+            'exhibits.*.size' => ['required', 'float', 'min:0'],
         ];
     }
 }
