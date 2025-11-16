@@ -6,7 +6,7 @@ using System.Text;
 
 public class ServerCommunicator : MonoBehaviour
 {
-    private const string API_BASE_URL = "https://unihack-2025-ereg-vd8nga8j.on-forge.com/api/expositions/";
+    private const string API_BASE_URL = "https://openxzbt.art/api/expositions/";
 
     private static ServerCommunicator instance;
 

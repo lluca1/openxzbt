@@ -23,6 +23,7 @@ public class TileData
     public string id;
     public string exposition_id;
     public int type;
+    public int has_exhibit;
     public float[] position;
     public float[] rotation;
 

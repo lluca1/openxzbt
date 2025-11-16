@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,7 @@ public class ExpoManager : MonoBehaviour
     [SerializeField] private ExpoPresetData presetsData;
 
     [SerializeField] private FirstPersonController playerPrefab;
-    [SerializeField] private ExpoTile tilePrefab;
+    [SerializeField] private ExpoTile tileI, tileII, tileL, tileU;
     [SerializeField] private Exhibit exhibitPrefab;
 
     [SerializeField] private Vector3 playerSpawnOffset;
@@ -73,19 +74,39 @@ public class ExpoManager : MonoBehaviour
 
         foreach (TileData tile in expoData.tiles)
         {
-            ExpoTile newTile = Instantiate(tilePrefab, tile.GetPosition(), Quaternion.identity);
-
-            newTile.transform.eulerAngles = tile.GetRotation();
-
             TileType tileType = (TileType)tile.type;
+            ExpoTile spawnTile = null;
+
+            switch (tileType)
+            {
+                case TileType.Empty:
+                    spawnTile = null;
+                    break;
+                case TileType.I:
+                    spawnTile = tileI;
+                    break;
+                case TileType.II:
+                    spawnTile = tileII;
+                    break;
+                case TileType.L:
+                    spawnTile = tileL;
+                    break;
+                case TileType.U:
+                    spawnTile = tileU;
+                    break;
+            }
+
+            ExpoTile newTile = Instantiate(spawnTile, tile.GetPosition(), Quaternion.identity);
+
+            newTile.transform.GetChild(0).eulerAngles = tile.GetRotation();
 
             if (presetTheme != -1)
             {
-                newTile.LoadData(tileType, presetsData.Presets[presetTheme], presetTheme);
+                newTile.LoadData(tileType, presetsData.Presets[presetTheme], presetTheme, tile.has_exhibit);
             }
             else
             {
-                newTile.LoadData(tileType, expoData.id.ToString());
+                newTile.LoadData(tileType, expoData.id.ToString(), tile.has_exhibit);
             }
 
             createdTiles.Add(newTile);
@@ -97,7 +118,8 @@ public class ExpoManager : MonoBehaviour
 
         foreach (ExhibitData exhibitData in expoData.exhibits)
         {
-            Vector3 pos = exhibitData.GetPosition() + exhibitSpawnOffset;
+            Vector3 finalSpawnOffset = exhibitSpawnOffset * exhibitData.size;
+            Vector3 pos = exhibitData.GetPosition() + finalSpawnOffset;
 
             Exhibit exhibit = Instantiate(exhibitPrefab, pos, Quaternion.identity);
 

@@ -36,6 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5870837059225903611}
+  - {fileID: 3947136388199102282}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-6414049895291332497
@@ -100,12 +101,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExpoManager
   presetsData: {fileID: 11400000, guid: 546682317620716478ddd1841804fa99, type: 2}
   playerPrefab: {fileID: 3693825073759902978, guid: 432c3c282353ddc409b42157ca2bcfe5, type: 3}
-  tilePrefab: {fileID: 5955623842777888700, guid: 2efdbf32eca5cc04c8a55086c83e9f7b, type: 3}
+  tileI: {fileID: 4068863448872715735, guid: ff1969781b6cbbd42a1c3943df3aed02, type: 3}
+  tileII: {fileID: 5955623842777888700, guid: 2efdbf32eca5cc04c8a55086c83e9f7b, type: 3}
+  tileL: {fileID: 7312013048955981741, guid: b17dfb38bd7cd594c9df61da9c0e220b, type: 3}
+  tileU: {fileID: 8894181495517595071, guid: 1f23191c81ed4ac458f56b1d822c0cfc, type: 3}
   exhibitPrefab: {fileID: 3467540078235444993, guid: e0c1520183baae1448b266dd4fe54766, type: 3}
   playerSpawnOffset: {x: 0, y: 1, z: 0}
   tileSpawnOffset: {x: 0, y: 0, z: 3}
   exhibitSpawnOffset: {x: 0, y: 0, z: 0}
-  expoId: 
   expoData:
     id: 0
     title: 
@@ -193,3 +196,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34da0624f77fa334fa98bcde51071da5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ModelLoader
+--- !u!1 &7162080024568498125
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3947136388199102282}
+  - component: {fileID: 4008818034255073220}
+  m_Layer: 7
+  m_Name: Post Processing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3947136388199102282
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7162080024568498125}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7093998633314458057}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4008818034255073220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7162080024568498125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Postprocessing.Runtime::UnityEngine.Rendering.PostProcessing.PostProcessVolume
+  sharedProfile: {fileID: 11400000, guid: b7283bcd6fde35146840f6cbf3f954be, type: 2}
+  isGlobal: 1
+  blendDistance: 0
+  weight: 1
+  priority: 0

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public enum TileType
 {
@@ -39,7 +40,7 @@ public class TilePlacer : MonoBehaviour
     private bool isPlacingExhibit = false;
     private bool isPlancingSpawn = false;
 
-    private GameObject currentSpawnPoint; // This needs to be set on load
+    private GameObject currentSpawnPoint;
 
     private Plane placementPlane;
     private GameObject initialTile;
@@ -51,6 +52,7 @@ public class TilePlacer : MonoBehaviour
 
     private void OnEnable()
     {
+        // ASSUMPTION: InputManager.Controls is available
         InputManager.Controls.UI.Click.performed += OnPlaceAction;
         InputManager.Controls.UI.RightClick.performed += CancelOrDelete;
         InputManager.Controls.Player.Rotate.performed += OnRotateAction;
@@ -125,7 +127,7 @@ public class TilePlacer : MonoBehaviour
 
                         if (isPlancingSpawn && currentSpawnPoint != null)
                         {
-
+                            // This internal check is kept from original code
                         }
 
                         FinalizePlacement();
@@ -138,7 +140,7 @@ public class TilePlacer : MonoBehaviour
                     {
                         if (isPlancingSpawn && currentSpawnPoint != null && IsPositionOccupiedByTopLayer(new Vector3(validationPosition.x, 0f, validationPosition.z)) && currentSpawnPoint.transform.position.x == validationPosition.x && currentSpawnPoint.transform.position.z == validationPosition.z)
                         {
-
+                            // Logic to allow placement if moving the existing spawn point
                             FinalizePlacement();
                         }
                         else
@@ -230,6 +232,7 @@ public class TilePlacer : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 1000f, deletionMask))
         {
             GameObject hitObject = hit.collider.gameObject;
+            Vector3 hitPosition = hitObject.transform.position; // Store position before destruction
 
             if (hitObject == initialTile)
             {
@@ -237,11 +240,16 @@ public class TilePlacer : MonoBehaviour
                 return;
             }
 
-
-
-
             if (hitObject.CompareTag("PlacedExhibit") || hitObject.CompareTag("PlayerSpawn"))
             {
+                // FIX: Find the underlying tile and reset the flag
+                PlacedTileData tileUnderneath = GetTileAtPosition(hitPosition);
+
+                // Only clear hasExhibit if deleting an exhibit, not a spawn point
+                if (hitObject.CompareTag("PlacedExhibit") && tileUnderneath != null)
+                {
+                    tileUnderneath.hasExhibit = 0;
+                }
 
                 if (hitObject.CompareTag("PlayerSpawn"))
                 {
@@ -317,11 +325,11 @@ public class TilePlacer : MonoBehaviour
             case TileType.Empty:
                 selectedPrefab = empty;
                 break;
-            case TileType.II:
-                selectedPrefab = II;
-                break;
             case TileType.I:
                 selectedPrefab = I;
+                break;
+            case TileType.II:
+                selectedPrefab = II;
                 break;
             case TileType.L:
                 selectedPrefab = L;
@@ -356,35 +364,45 @@ public class TilePlacer : MonoBehaviour
     {
         if (previewTile != null)
         {
+            Vector3 placementPosition = previewTile.transform.position;
+            PlacedTileData tileUnderneath = GetTileAtPosition(placementPosition);
 
             if (isPlancingSpawn && currentSpawnPoint != null)
             {
+                PlacedTileData oldTile = GetTileAtPosition(currentSpawnPoint.transform.position);
+
                 Destroy(currentSpawnPoint);
                 Debug.Log("Previous Player Spawn destroyed to place new one.");
                 currentSpawnPoint = null;
             }
 
-            GameObject newObject = Instantiate(currentPrefab, previewTile.transform.position, previewTile.transform.rotation);
+            GameObject newObject = Instantiate(currentPrefab, placementPosition, previewTile.transform.rotation);
 
 
             if (isPlacingExhibit)
             {
                 newObject.tag = "PlacedExhibit";
+
+                if (tileUnderneath != null)
+                {
+                    tileUnderneath.hasExhibit = 1;
+                }
                 Debug.Log($"Placed Exhibit at: {newObject.transform.position}");
             }
             else if (isPlancingSpawn)
             {
                 newObject.tag = "PlayerSpawn";
                 currentSpawnPoint = newObject;
+
                 Debug.Log($"Placed Player Spawn at: {newObject.transform.position}");
             }
             else
             {
                 newObject.tag = "PlacedTile";
-                newObject.AddComponent<PlacedTileData>();
+                PlacedTileData dataComponent = newObject.AddComponent<PlacedTileData>();
 
                 TileType tileType = GetTileTypeFromPrefab(currentPrefab);
-                newObject.GetComponent<PlacedTileData>().Setup(tileType);
+                dataComponent.Setup(tileType);
 
                 Debug.Log($"Placed Tile at: {newObject.transform.position}");
             }
@@ -392,6 +410,31 @@ public class TilePlacer : MonoBehaviour
             Destroy(previewTile);
             previewTile = null;
         }
+    }
+
+    // FIX: Helper method to find the tile component underneath a position
+    private PlacedTileData GetTileAtPosition(Vector3 position)
+    {
+        // Search only at the tile level (Y=0)
+        Vector3 tilePosition = new Vector3(position.x, 0f, position.z);
+
+        // We use a small radius to ensure we only hit the tile directly underneath
+        Collider[] hitColliders = Physics.OverlapSphere(tilePosition, gridSize / 4f, placementMask);
+
+        foreach (Collider col in hitColliders)
+        {
+            // Check if the collider belongs to a placed tile (tag check)
+            if (col.gameObject.CompareTag("PlacedTile"))
+            {
+                // Check if the component exists before returning
+                PlacedTileData tileData = col.gameObject.GetComponent<PlacedTileData>();
+                if (tileData != null)
+                {
+                    return tileData;
+                }
+            }
+        }
+        return null;
     }
 
     private TileType GetTileTypeFromPrefab(GameObject prefab)
@@ -474,7 +517,6 @@ public class TilePlacer : MonoBehaviour
         return false;
     }
 
-    // START OF FIX: Public accessors and setter
     public GameObject GetTilePrefab(TileType type)
     {
         return type switch
@@ -492,14 +534,13 @@ public class TilePlacer : MonoBehaviour
 
     public GameObject GetPlayerSpawnPrefab() => playerSpawnPrefab;
 
-    // FIX: Method to set the internal spawn point reference on load
     public void SetCurrentSpawnPoint(GameObject spawnObject)
     {
         currentSpawnPoint = spawnObject;
         Debug.Log("TilePlacer's currentSpawnPoint reference synchronized after load.");
     }
 
-    public void SaveLayout()
+    public void Save()
     {
         GameManager.Instance.ExpoLayoutEditor.SaveLayout();
     }
