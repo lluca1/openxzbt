@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 7337477383127000824}
   - component: {fileID: 2101266152501866195}
   - component: {fileID: 819035687202426259}
-  - component: {fileID: 479988014276501630}
   - component: {fileID: 8372881568834962691}
+  - component: {fileID: 3821242429464005908}
   m_Layer: 0
   m_Name: GLOBAL MANAGERS
   m_TagString: Untagged
@@ -34,7 +34,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5870837059225903611}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-6414049895291332497
@@ -85,18 +86,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 445a572cd213f124587369718b912120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
---- !u!114 &479988014276501630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2018958099651161952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34da0624f77fa334fa98bcde51071da5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ModelLoader
 --- !u!114 &8372881568834962691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,13 +104,92 @@ MonoBehaviour:
   exhibitPrefab: {fileID: 3467540078235444993, guid: e0c1520183baae1448b266dd4fe54766, type: 3}
   playerSpawnOffset: {x: 0, y: 1, z: 0}
   tileSpawnOffset: {x: 0, y: 0, z: 3}
-  currentExpoId: 
-  usePresetSettings: 1
-  presetIndex: 0
-  exhibitIds:
-  - 1
-  - 2
-  - 3
-  - 4
-  createdTiles: []
-  createdExhibits: []
+  exhibitSpawnOffset: {x: 0, y: 0, z: 0}
+  expoId: 
+  expoData:
+    id: 0
+    title: 
+    description: 
+    preset_theme: 0
+    spawnpoint: []
+    curator:
+      id: 0
+      name: 
+      email: 
+    exhibits: []
+    tiles: []
+    floor_texture: 
+    ceiling_texture: 
+    wall_texture: 
+    ambient_track: 
+    meta:
+      exhibits_count: 0
+--- !u!114 &3821242429464005908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018958099651161952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 903900e611ad3a3418638517641058c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LayoutSaver
+--- !u!1 &3469632758968148351
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5870837059225903611}
+  - component: {fileID: 5034617149131838781}
+  - component: {fileID: 8846279978353845715}
+  m_Layer: 0
+  m_Name: Data Loading
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5870837059225903611
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3469632758968148351}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7093998633314458057}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5034617149131838781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3469632758968148351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f6f42c0b8b07546832529cb69b5e42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DataLoader
+--- !u!114 &8846279978353845715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3469632758968148351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34da0624f77fa334fa98bcde51071da5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelLoader
