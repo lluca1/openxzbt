@@ -34,15 +34,15 @@
                             classic laravel
                         </span>
 
-                        <span class="px-3 py-1 border border-[#22c55e]/70 bg-[#052713] rounded-none">
-                            build: {{ now()->format('Y-m-d') }}
-                        </span>
-
                         <span class="px-3 py-1 border border-[#facc15]/70 bg-[#26220b] rounded-none">
                             status: experimental
                         </span>
 
                         <span class="px-3 py-1 border border-[#f97373]/70 bg-[#5b1010] rounded-none">
+                            build: {{ now()->format('Y-m-d') }}
+                        </span>
+                        
+                        <span class="px-3 py-1 border border-[#22c55e]/70 bg-[#052713] rounded-none">
                             game in what_is_here
                         </span>
                     </div>
