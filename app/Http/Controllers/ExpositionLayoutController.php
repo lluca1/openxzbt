@@ -53,6 +53,7 @@ class ExpositionLayoutController extends Controller
                 ],
                 [
                     'type' => $tileData['type'],
+                    'has_exhibit' => $tileData['has_exhibit'],
                     'position' => $tileData['position'],
                     'rotation' => $tileData['rotation'],
                 ]

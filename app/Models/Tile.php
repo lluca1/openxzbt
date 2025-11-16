@@ -16,6 +16,7 @@ class Tile extends Model
         'exposition_id',
         'tile_identifier',
         'type',
+        'has_exhibit',
         'position',
         'rotation',
     ];

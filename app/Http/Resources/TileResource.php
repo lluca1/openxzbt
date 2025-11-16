@@ -16,6 +16,7 @@ class TileResource extends JsonResource
             'id' => $this->tile_identifier,
             'exposition_id' => $this->exposition_id,
             'type' => $this->type,
+            'has_exhibit' => $this->has_exhibit,
             'position' => $this->position,
             'rotation' => $this->rotation,
         ];
