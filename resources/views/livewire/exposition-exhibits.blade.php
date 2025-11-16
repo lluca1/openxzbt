@@ -276,15 +276,23 @@
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
                             <span class="text-[10px] text-zinc-500">position: {{ $exhibit->position ?? 0 }}</span>
 
-                            @if ($isOwner)
-                                <button
-                                    type="button"
-                                    wire:click="delete({{ $exhibit->id }})"
-                                    class="px-3 py-1 border border-[#f97373]/80 text-[#ffecec] text-[11px] rounded-none hover:bg-[#5b1010]/40"
-                                >
-                                    :: DELETE EXHIBIT
-                                </button>
-                            @endif
+                            <div class="flex items-center gap-2">
+                                <a href="{{ route('exhibits.download', [$exposition, $exhibit]) }}"
+                                   class="px-3 py-1 border border-[#38bdf8]/80 bg-[#072635] text-[#bae6fd] text-[11px] rounded-none hover:bg-[#0a3a50]"
+                                   title="Download this exhibit as .zip">
+                                    :: DOWNLOAD
+                                </a>
+
+                                @if ($isOwner)
+                                    <button
+                                        type="button"
+                                        wire:click="delete({{ $exhibit->id }})"
+                                        class="px-3 py-1 border border-[#f97373]/80 text-[#ffecec] text-[11px] rounded-none hover:bg-[#5b1010]/40"
+                                    >
+                                        :: DELETE EXHIBIT
+                                    </button>
+                                @endif
+                            </div>
                         </div>
                     </article>
                 @empty
