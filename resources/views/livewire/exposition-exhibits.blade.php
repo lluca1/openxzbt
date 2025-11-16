@@ -113,99 +113,83 @@
     {{-- NOTE: added items-start here --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs items-start">
         {{-- LEFT: SETTINGS / UPLOAD / THUMBNAIL --}}
-        <div class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-4">
+        <div class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-6">
             @if ($isOwner)
-                {{-- THUMBNAIL EDITOR TOGGLE --}}
-                <button
-                    type="button"
-                    wire:click="$toggle('showThumbnailEditor')"
-                    class="w-full flex items-center justify-between px-3 py-2 border border-zinc-700 hover:border-zinc-600 rounded-none bg-zinc-900/30 transition"
-                >
-                    <span class="text-[12px] font-semibold tracking-tight text-zinc-100">exposition thumbnail</span>
-                    <span class="text-[10px] text-zinc-500">{{ $showThumbnailEditor ? '▼' : '▶' }}</span>
-                </button>
+                @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
 
-                @if ($showThumbnailEditor)
-                    {{-- THUMBNAIL EDITOR --}}
-                    <div class="space-y-2 border border-zinc-700 rounded-none p-3 bg-zinc-900/20">
-                        <label class="block text-[11px] text-zinc-400" for="thumbnail">
-                            select image file
-                        </label>
-
-                        <input
-                            id="thumbnail"
-                            type="file"
-                            accept="image/*"
-                            wire:model="thumbnail"
-                            class="input-file-fancy"
+                {{-- THUMBNAIL CONTROLS --}}
+                <section class="space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <div>
+                            <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">exposition thumbnail</h2>
+                            <p class="text-[10px] text-zinc-500">4:3 cover · max 4&nbsp;MB</p>
+                        </div>
+                        <button
+                            type="button"
+                            wire:click="$toggle('showThumbnailEditor')"
+                            class="px-3 py-1 border border-zinc-700 hover:border-zinc-500 rounded-none text-[11px] text-zinc-200"
                         >
+                            {{ $showThumbnailEditor ? 'close editor' : 'update' }}
+                        </button>
+                    </div>
 
-                        <p class="text-[10px] text-zinc-500">
-                            used on cards & listings. 4:3 aspect ratio recommended. max 4 MB.
-                        </p>
+                    @if ($showThumbnailEditor)
+                        <div class="space-y-3 border border-zinc-700 rounded-none p-3 bg-zinc-900/20">
+                            <label class="block text-[11px] text-zinc-400" for="thumbnail">upload image</label>
+                            <input
+                                id="thumbnail"
+                                type="file"
+                                accept="image/*"
+                                wire:model="thumbnail"
+                                class="input-file-fancy"
+                            >
+                            @error('thumbnail')
+                                <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
+                            @enderror
 
-                        @error('thumbnail')
-                            <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
-                        @enderror
+                            <div class="border border-zinc-700 rounded-none p-2">
+                                <p class="text-[10px] text-zinc-500 mb-2">preview</p>
+                                <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center overflow-hidden"
+                                     style="aspect-ratio: 4 / 3;">
+                                    @if ($thumbnail)
+                                        <img src="{{ $thumbnail->temporaryUrl() }}" alt="thumbnail preview" class="w-full h-full object-cover">
+                                    @elseif ($exposition->cover_image_path)
+                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}" alt="{{ $exposition->title }} cover" class="w-full h-full object-cover">
+                                    @else
+                                        <span class="text-[10px] text-zinc-500">no thumbnail yet</span>
+                                    @endif
+                                </div>
+                            </div>
 
-                        {{-- PREVIEW: NEW UPLOAD OR EXISTING COVER --}}
-                        <div class="mt-2 border border-zinc-700 rounded-none p-2">
-                            <p class="text-[10px] text-zinc-500 mb-2">thumbnail preview</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    wire:click="saveThumbnail"
+                                    class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717] text-[11px]"
+                                >
+                                    :: SAVE THUMBNAIL
+                                </button>
 
-                            <div class="w-full bg-zinc-900 border border-dashed border-zinc-700 rounded-none flex items-center justify-center overflow-hidden"
-                                 style="aspect-ratio: 4 / 3;">
-                                @if ($thumbnail)
-                                    {{-- livewire temporary upload preview --}}
-                                    <img
-                                        src="{{ $thumbnail->temporaryUrl() }}"
-                                        alt="thumbnail preview"
-                                        class="w-full h-full object-cover"
+                                @if ($exposition->cover_image_path)
+                                    <button
+                                        type="button"
+                                        wire:click="clearThumbnail"
+                                        class="px-3 py-1 border border-zinc-600 text-zinc-200 rounded-none hover:bg-zinc-800/60 text-[11px]"
                                     >
-                                @elseif ($exposition->cover_image_path)
-                                    {{-- existing saved cover --}}
-                                    <img
-                                        src="{{ \Illuminate\Support\Facades\Storage::url($exposition->cover_image_path) }}"
-                                        alt="{{ $exposition->title }} cover"
-                                        class="w-full h-full object-cover"
-                                    >
-                                @else
-                                    <span class="text-[10px] text-zinc-500">no thumbnail yet</span>
+                                        :: CLEAR THUMBNAIL
+                                    </button>
                                 @endif
                             </div>
                         </div>
-
-                        <div class="flex gap-2 pt-1">
-                            <button
-                                type="button"
-                                wire:click="saveThumbnail"
-                                class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717] text-[11px]"
-                            >
-                                :: UPDATE THUMBNAIL
-                            </button>
-
-                            @if ($exposition->cover_image_path)
-                                <button
-                                    type="button"
-                                    wire:click="clearThumbnail"
-                                    class="px-3 py-1 border border-zinc-600 text-zinc-200 rounded-none hover:bg-zinc-800/60 text-[11px]"
-                                >
-                                    :: REMOVE THUMBNAIL
-                                </button>
-                            @endif
-                        </div>
-                    </div>
-                @endif
+                    @endif
+                </section>
 
                 {{-- THEME PRESET --}}
-                @php($themeLabels = [-1=>'default',0=>'classic',1=>'medieval',2=>'scifi'])
-                <div class="space-y-2 mt-6">
-                    <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">exposition theme preset</h2>
-                    <p class="text-[11px] text-zinc-500">
-                        current:
-                        <span class="text-zinc-300">
-                            {{ $themeLabels[$exposition->preset_theme] ?? 'default' }}
-                        </span>
-                    </p>
+                <section class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">theme preset</h2>
+                        <span class="text-[10px] text-zinc-500">current: <span class="text-zinc-300">{{ $themeLabels[$exposition->preset_theme] ?? 'default' }}</span></span>
+                    </div>
                     <div class="flex flex-wrap gap-2 text-[11px]">
                         <button type="button"
                                 wire:click="setPresetTheme(-1)"
@@ -228,14 +212,19 @@
                             scifi
                         </button>
                     </div>
-                </div>
+                </section>
 
-                <div class="space-y-3 mt-6">
-                    <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">environment textures &amp; ambient audio</h2>
+                {{-- ENVIRONMENT MEDIA --}}
+                <section class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">environment media</h2>
+                        <span class="text-[10px] text-zinc-500">
+                            {{ ($exposition->preset_theme ?? -1) === -1 ? 'custom mode' : 'preset locked' }}
+                        </span>
+                    </div>
+
                     @if (($exposition->preset_theme ?? -1) === -1)
-                        <p class="text-[11px] text-zinc-500">
-                            upload optional tiling textures and a looping soundtrack. files are stored under /storage/textures/{{ $exposition->id }} and /storage/audio/{{ $exposition->id }}.
-                        </p>
+                        <p class="text-[11px] text-zinc-500">Drop seamless textures or a short loop to shape the space.</p>
 
                         <form wire:submit.prevent="saveEnvironmentAssets" class="space-y-4">
                             <div class="grid grid-cols-1 gap-4">
@@ -249,20 +238,15 @@
                                         class="input-file-fancy"
                                     >
                                     <p class="text-[10px] text-zinc-500">
-                                        current:
                                         @if ($exposition->floor_texture)
                                             <a href="{{ \Illuminate\Support\Facades\Storage::url($exposition->floor_texture) }}" class="text-[#38bdf8] underline" target="_blank">
                                                 {{ basename($exposition->floor_texture) }}
                                             </a>
+                                            <button type="button" wire:click="clearEnvironmentAsset('floor')" class="ml-2 text-[#f97373] hover:text-[#fca5a5]">remove</button>
                                         @else
-                                            <span class="text-zinc-300">none</span>
+                                            <span class="text-zinc-300">none uploaded</span>
                                         @endif
                                     </p>
-                                    @if ($exposition->floor_texture)
-                                        <button type="button" wire:click="clearEnvironmentAsset('floor')" class="text-[10px] text-[#f97373] hover:text-[#fca5a5]">
-                                            remove floor texture
-                                        </button>
-                                    @endif
                                     @error('floorTextureUpload')
                                         <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
                                     @enderror
@@ -278,20 +262,15 @@
                                         class="input-file-fancy"
                                     >
                                     <p class="text-[10px] text-zinc-500">
-                                        current:
                                         @if ($exposition->ceiling_texture)
                                             <a href="{{ \Illuminate\Support\Facades\Storage::url($exposition->ceiling_texture) }}" class="text-[#38bdf8] underline" target="_blank">
                                                 {{ basename($exposition->ceiling_texture) }}
                                             </a>
+                                            <button type="button" wire:click="clearEnvironmentAsset('ceiling')" class="ml-2 text-[#f97373] hover:text-[#fca5a5]">remove</button>
                                         @else
-                                            <span class="text-zinc-300">none</span>
+                                            <span class="text-zinc-300">none uploaded</span>
                                         @endif
                                     </p>
-                                    @if ($exposition->ceiling_texture)
-                                        <button type="button" wire:click="clearEnvironmentAsset('ceiling')" class="text-[10px] text-[#f97373] hover:text-[#fca5a5]">
-                                            remove ceiling texture
-                                        </button>
-                                    @endif
                                     @error('ceilingTextureUpload')
                                         <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
                                     @enderror
@@ -307,27 +286,22 @@
                                         class="input-file-fancy"
                                     >
                                     <p class="text-[10px] text-zinc-500">
-                                        current:
                                         @if ($exposition->wall_texture)
                                             <a href="{{ \Illuminate\Support\Facades\Storage::url($exposition->wall_texture) }}" class="text-[#38bdf8] underline" target="_blank">
                                                 {{ basename($exposition->wall_texture) }}
                                             </a>
+                                            <button type="button" wire:click="clearEnvironmentAsset('wall')" class="ml-2 text-[#f97373] hover:text-[#fca5a5]">remove</button>
                                         @else
-                                            <span class="text-zinc-300">none</span>
+                                            <span class="text-zinc-300">none uploaded</span>
                                         @endif
                                     </p>
-                                    @if ($exposition->wall_texture)
-                                        <button type="button" wire:click="clearEnvironmentAsset('wall')" class="text-[10px] text-[#f97373] hover:text-[#fca5a5]">
-                                            remove wall texture
-                                        </button>
-                                    @endif
                                     @error('wallTextureUpload')
                                         <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
                                     @enderror
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label class="block text-[11px] text-zinc-400" for="ambientTrackUpload">ambient audio loop</label>
+                                    <label class="block text-[11px] text-zinc-400" for="ambientTrackUpload">ambient loop</label>
                                     <input
                                         id="ambientTrackUpload"
                                         type="file"
@@ -336,24 +310,19 @@
                                         class="input-file-fancy"
                                     >
                                     <p class="text-[10px] text-zinc-500">
-                                        current:
                                         @if ($exposition->ambient_track)
                                             <a href="{{ \Illuminate\Support\Facades\Storage::url($exposition->ambient_track) }}" class="text-[#38bdf8] underline" target="_blank">
                                                 {{ basename($exposition->ambient_track) }}
                                             </a>
+                                            <button type="button" wire:click="clearEnvironmentAsset('ambient')" class="ml-2 text-[#f97373] hover:text-[#fca5a5]">remove</button>
                                         @else
-                                            <span class="text-zinc-300">none</span>
+                                            <span class="text-zinc-300">none uploaded</span>
                                         @endif
                                     </p>
-                                    @if ($exposition->ambient_track)
-                                        <button type="button" wire:click="clearEnvironmentAsset('ambient')" class="text-[10px] text-[#f97373] hover:text-[#fca5a5]">
-                                            remove ambient audio
-                                        </button>
-                                    @endif
+                                    <p class="text-[10px] text-zinc-500">mp3, wav, ogg, flac, m4a · up to ~30&nbsp;MB</p>
                                     @error('ambientTrackUpload')
                                         <p class="text-[10px] text-[#f97373]">{{ $message }}</p>
                                     @enderror
-                                    <p class="text-[10px] text-zinc-500">supports mp3, wav, ogg, flac, m4a up to ~30 MB.</p>
                                 </div>
                             </div>
 
@@ -362,30 +331,34 @@
                                     type="submit"
                                     class="px-3 py-1 border border-[#38bdf8]/80 bg-[#072635] text-[#bae6fd] text-[11px] rounded-none hover:bg-[#0a3a50]"
                                 >
-                                    :: SAVE ENVIRONMENT MEDIA
+                                    :: SAVE MEDIA
                                 </button>
-                                <p class="text-[10px] text-zinc-500">leave fields blank to keep existing files untouched.</p>
+                                <p class="text-[10px] text-zinc-500">leave blanks to keep files</p>
                             </div>
                         </form>
                     @else
                         <div class="border border-dashed border-zinc-700 rounded-none p-3 text-[11px] text-zinc-500">
-                            preset themes manage their own materials. switch to custom if you need bespoke textures or audio.
+                            presets supply their own textures. switch to custom to override them.
                         </div>
                     @endif
-                </div>
+                </section>
 
                 {{-- EXHIBIT UPLOAD FORM --}}
-                <x-expositions.upload-form />
+                <section>
+                    <h2 class="sr-only">upload new exhibit</h2>
+                    <x-expositions.upload-form />
+                </section>
             @else
-                {{-- READ ONLY --}}
-                <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">read-only mode</h2>
-                <p class="text-[11px] text-zinc-500">
-                    you can browse these exhibits, but only
-                    <span class="text-zinc-300">
-                        {{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'its_curator') }}
-                    </span>
-                    can upload new assets here.
-                </p>
+                <section class="space-y-2">
+                    <h2 class="text-[12px] font-semibold tracking-tight text-zinc-100">read-only mode</h2>
+                    <p class="text-[11px] text-zinc-500">
+                        only
+                        <span class="text-zinc-300">
+                            {{ '@'.($exposition->user?->name ? \Illuminate\Support\Str::slug($exposition->user->name, '_') : 'its_curator') }}
+                        </span>
+                        can upload or edit assets in this space.
+                    </p>
+                </section>
             @endif
         </div>
 
@@ -401,7 +374,6 @@
                     <article class="border border-zinc-700 bg-[#050608] rounded-none p-4 space-y-2" wire:key="exhibit-{{ $exhibit->id }}">
                         <div class="flex items-center justify-between text-[10px] text-zinc-500">
                             <span>uploaded {{ $exhibit->created_at->diffForHumans() }}</span>
-                            <span>bundle: OBJ + MTL</span>
                         </div>
 
                         <h3 class="text-[14px] text-zinc-100 font-semibold tracking-tight">

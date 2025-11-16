@@ -9,7 +9,7 @@
                 id="exhibit-title"
                 type="text"
                 wire:model.defer="title"
-                placeholder="e.g. glitch totem"
+                placeholder="e.g. cute cat sculpture"
                 class="w-full bg-[#050608] border border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100 placeholder:text-zinc-500"
             >
             @error('title')
@@ -23,7 +23,7 @@
                 id="exhibit-description"
                 rows="4"
                 wire:model.defer="description"
-                placeholder="materials, lighting cues, sound triggers..."
+                placeholder="what is this exhibit about?"
                 class="w-full bg-[#050608] border border-zinc-700 focus:border-zinc-300 outline-none px-3 py-2 rounded-none text-[12px] text-zinc-100 placeholder:text-zinc-500"
             ></textarea>
             @error('description')
