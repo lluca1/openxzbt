@@ -17,6 +17,7 @@ class ExpositionResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'preset_theme' => $this->preset_theme,
+            
             'curator' => $this->whenLoaded('user', function () {
                 return [
                     'id' => $this->user?->id,
@@ -24,8 +25,17 @@ class ExpositionResource extends JsonResource
                     'email' => $this->user?->email,
                 ];
             }),
+            
             'exhibits' => ExhibitResource::collection($this->whenLoaded('exhibits')),
+            
             'tiles' => TileResource::collection($this->whenLoaded('tiles')),
+            
+            //todo
+            'floor_texture'=>'',
+            'ceiling_texture'=>'',
+            'wall_texture'=>'',
+            'ambient_track'=>'',
+            
             'meta' => [
                 'exhibits_count' => $this->whenLoaded('exhibits', fn () => $this->exhibits->count()),
             ],
