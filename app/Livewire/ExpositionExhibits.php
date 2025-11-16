@@ -42,10 +42,11 @@ class ExpositionExhibits extends Component
     #[Rule('nullable|string')]
     public string $description = '';
 
-    #[Rule('required|file|mimes:obj|max:51200')]
+    // Validate file presence and size via attributes; check extensions manually in save()
+    #[Rule('required|file|max:512000')]
     public $modelFile;
 
-    #[Rule('required|file|mimes:mtl|max:51200')]
+    #[Rule('required|file|max:51200')]
     public $materialFile;
 
     #[Rule('nullable|array|max:10')]
@@ -77,6 +78,28 @@ class ExpositionExhibits extends Component
     {
         $userId = $this->ensureExpositionOwner();
         $this->validate();
+        // Ensure uploaded files have correct extensions — some browsers/clients may report odd MIME types
+        if (! $this->modelFile) {
+            $this->addError('modelFile', 'The model file failed to upload.');
+            return;
+        }
+
+        $modelExt = strtolower($this->modelFile->getClientOriginalExtension() ?: $this->modelFile->extension());
+        if ($modelExt !== 'obj') {
+            $this->addError('modelFile', 'The model file must be an .obj file.');
+            return;
+        }
+
+        if (! $this->materialFile) {
+            $this->addError('materialFile', 'The materials file failed to upload.');
+            return;
+        }
+
+        $mtlExt = strtolower($this->materialFile->getClientOriginalExtension() ?: $this->materialFile->extension());
+        if ($mtlExt !== 'mtl') {
+            $this->addError('materialFile', 'The materials file must be an .mtl file.');
+            return;
+        }
         $this->validate([
             'textureFiles' => 'nullable|array|max:10',
             'textureFiles.*' => 'file|mimes:png,jpg,jpeg,bmp,webp|max:20480',
