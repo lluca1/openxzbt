@@ -2,6 +2,7 @@
     // safety defaults in case the component is rendered without data
     $query   = $query   ?? '';
     $results = $results ?? [];
+    $sortBy  = $sortBy  ?? 'likes';
 @endphp
 
 <section class="w-full">
@@ -40,6 +41,27 @@
                     </button>
                 @endif
             </div>
+
+            {{-- SORT OPTIONS (always available) --}}
+            <div class="border-t border-zinc-700 pt-2 flex items-center gap-2 text-[10px]">
+                <span class="text-zinc-400">order by:</span>
+
+                <button
+                    type="button"
+                    wire:click="$set('sortBy', 'likes')"
+                    class="px-2 py-1 border rounded-none transition {{ $sortBy === 'likes' ? 'border-[#38bdf8]/70 bg-[#072635] text-[#bae6fd]' : 'border-zinc-700 text-zinc-400 hover:text-zinc-300' }}"
+                >
+                    popularity
+                </button>
+
+                <button
+                    type="button"
+                    wire:click="$set('sortBy', 'recent')"
+                    class="px-2 py-1 border rounded-none transition {{ $sortBy === 'recent' ? 'border-[#38bdf8]/70 bg-[#072635] text-[#bae6fd]' : 'border-zinc-700 text-zinc-400 hover:text-zinc-300' }}"
+                >
+                    newest
+                </button>
+            </div>
         </div>
 
         {{-- RESULTS LIST --}}
@@ -62,7 +84,11 @@
                                 <span class="truncate">
                                     {{ '@'.($expo->user?->name ? \Illuminate\Support\Str::slug($expo->user->name, '_') : 'anonymous') }}
                                 </span>
-                                <span>{{ $expo->exhibits()->count() }} objs</span>
+                                <span class="flex items-center gap-3">
+                                    <span>{{ $expo->exhibits_count ?? $expo->exhibits()->count() }} objs</span>
+                                    <span class="text-zinc-400">·</span>
+                                    <span>{{ $expo->likes_count ?? 0 }} likes</span>
+                                </span>
                             </div>
                         </a>
 
