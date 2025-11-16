@@ -25,16 +25,18 @@ public class SceneLoader : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        InputManager.Controls.Player.Cancel.performed += (ctx) => LoadMenu();
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        InputManager.Controls.Player.Cancel.performed -= (ctx) => LoadMenu();
     }
 
     private void Start()
     {
-        //LoadMenu();
+        LoadMenu();
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)

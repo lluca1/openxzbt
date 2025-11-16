@@ -1,0 +1,42 @@
+{
+    "playerSpawn": [
+        -15.0,
+        1.0,
+        -30.0
+    ],
+    "tiles": [
+        {
+            "id": "0",
+            "exposition_id": "4",
+            "type": 4,
+            "has_exhibit": 0,
+            "position": [
+                -15.0,
+                0.0,
+                -45.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "id": "1",
+            "exposition_id": "4",
+            "type": 4,
+            "has_exhibit": 0,
+            "position": [
+                -15.0,
+                0.0,
+                -30.0
+            ],
+            "rotation": [
+                0.0,
+                180.0,
+                0.0
+            ]
+        }
+    ],
+    "exhibits": []
+}

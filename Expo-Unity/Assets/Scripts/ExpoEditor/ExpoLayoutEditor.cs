@@ -197,7 +197,7 @@ public class ExpoLayoutEditor : MonoBehaviour
 
         SaveJsonToAssetsFolder(jsonData);
 
-        string endpoint = $"{expoData.id}/layout";
+        string endpoint = $"{expoData.id}";
 
         string sanctumToken = "";
 
@@ -228,6 +228,8 @@ public class ExpoLayoutEditor : MonoBehaviour
 
     private void OnLayoutSaveComplete(bool success, string jsonResponse, string error)
     {
+        Debug.Log("JSON REPONSE: " + jsonResponse);
+
         if (success)
         {
             Debug.Log("Layout saved successfully! Server response received");

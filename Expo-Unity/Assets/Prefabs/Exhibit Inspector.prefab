@@ -180,8 +180,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -442,8 +442,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -826,7 +826,7 @@ MonoBehaviour:
   inspectUI: {fileID: 1207076150827549150}
   modelName: {fileID: 1196248347949141939}
   modelDescription: {fileID: 3682855071070920873}
-  modelSpawnOffset: {x: 0, y: -3, z: 1}
+  modelSpawnOffset: {x: 0, y: 0, z: 1}
   rotationSpeed: 12
 --- !u!1 &8210146829635206877
 GameObject:
