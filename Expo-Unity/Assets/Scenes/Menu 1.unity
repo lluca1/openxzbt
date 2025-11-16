@@ -1375,6 +1375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExpoLoadMenu
   idField: {fileID: 1561177346}
   loadButton: {fileID: 463525951}
+  editButton: {fileID: 0}
 --- !u!1001 &999265444
 PrefabInstance:
   m_ObjectHideFlags: 0
