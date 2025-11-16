@@ -306,7 +306,6 @@
 
                                 <button
                                     type="button"
-                                    onclick="if (!confirm('delete this exposition?')) { event.stopImmediatePropagation(); }"
                                     wire:click="delete({{ $exposition->id }})"
                                     class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none text-[11px] hover:bg-[#7f1717]"
                                 >

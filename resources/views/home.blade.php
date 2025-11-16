@@ -114,14 +114,16 @@
                                        class="flex-1 border border-zinc-600 hover:border-zinc-300 px-3 py-1 text-center rounded-none">
                                         :: MANAGE EXHIBITS
                                     </a>
-                                    <button
-                                        type="button"
-                                        onclick="if (!confirm('delete this exposition?')) { event.stopImmediatePropagation(); }"
-                                        wire:click="delete({{ $expo->id }})"
-                                        class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]"
-                                    >
-                                        :: DELETE
-                                    </button>
+                                    <form method="POST" action="{{ route('expositions.destroy', $expo) }}" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            type="submit"
+                                            class="px-3 py-1 border border-[#f97373]/80 bg-[#5b1010] text-[#ffecec] rounded-none hover:bg-[#7f1717]"
+                                        >
+                                            :: DELETE
+                                        </button>
+                                    </form>
                                 </div>
                             </x-exposition.card>
                         @endforeach

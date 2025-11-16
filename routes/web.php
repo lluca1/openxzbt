@@ -3,6 +3,7 @@
 use App\Livewire\ExpositionExhibits;
 use App\Livewire\ExpositionsManager;
 use App\Http\Controllers\ExhibitDownloadController;
+use App\Http\Controllers\ExpositionController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Exposition;
 
@@ -66,6 +67,7 @@ Route::view('/profile', 'profile')
 Route::middleware(['auth'])->group(function () {
     Route::get('/expositions', ExpositionsManager::class)->name('expositions.index');
     Route::get('/expositions/{exposition}', ExpositionExhibits::class)->name('expositions.show');
+    Route::delete('/expositions/{exposition}', [ExpositionController::class, 'destroy'])->name('expositions.destroy');
     Route::get('/expositions/{exposition}/exhibits/{exhibit}/download', [ExhibitDownloadController::class, 'downloadExhibit'])->name('exhibits.download');
 });
 
