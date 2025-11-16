@@ -51,25 +51,21 @@ class ExpositionLayoutController extends Controller
 
     private function syncTiles(Exposition $exposition, Collection $tiles): void
     {
-        $identifiers = $tiles->pluck('id');
+        $exposition->tiles()->delete();
 
-        foreach ($tiles as $tileData) {
-            $exposition->tiles()->updateOrCreate(
-                [
-                    'tile_identifier' => $tileData['id'],
-                ],
-                [
-                    'type' => $tileData['type'],
-                    'has_exhibit' => $tileData['has_exhibit'],
-                    'position' => $tileData['position'],
-                    'rotation' => $tileData['rotation'],
-                ]
-            );
+        if ($tiles->isEmpty()) {
+            return;
         }
 
-        $exposition->tiles()
-            ->whereNotIn('tile_identifier', $identifiers)
-            ->delete();
+        foreach ($tiles as $tileData) {
+            $exposition->tiles()->create([
+                'tile_identifier' => $tileData['id'],
+                'type' => $tileData['type'],
+                'has_exhibit' => $tileData['has_exhibit'],
+                'position' => $tileData['position'],
+                'rotation' => $tileData['rotation'],
+            ]);
+        }
     }
 
     private function syncExhibitLayouts(Exposition $exposition, Collection $exhibits): void
