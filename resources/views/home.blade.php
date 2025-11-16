@@ -42,7 +42,7 @@
         {{-- HERO / TOP PANEL --}}
         <section class="border border-white/10 bg-[#0a0a0a] p-6 md:p-8">
             <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-white mb-2">
-                welcome to<span class="text-red-400">openxzbt</span>
+                welcome to <span class="text-red-400">openxzbt</span>
             </h1>
 
             @guest
