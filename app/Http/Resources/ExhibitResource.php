@@ -18,7 +18,7 @@ class ExhibitResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'media_path' => $this->media_path,
-            'position' => $this->position,
+            'position' => $this->layout_position ?? [0.0, 0.0, 0.0],
             'size' => $this->size,
         ];
     }

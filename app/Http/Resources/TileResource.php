@@ -13,7 +13,7 @@ class TileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->tile_identifier,
             'exposition_id' => $this->exposition_id,
             'type' => $this->type,
             'position' => $this->position,

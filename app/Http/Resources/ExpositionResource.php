@@ -17,6 +17,7 @@ class ExpositionResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'preset_theme' => $this->preset_theme,
+            'spawnpoint' => $this->player_spawn,
             
             'curator' => $this->whenLoaded('user', function () {
                 return [
