@@ -1,4 +1,4 @@
->  **Made in 48 hours for** [UniHack 2025](https://unihack.eu) 
+>  **Made in 48 hours for** [UniHack 2025](https://unihack.eu) **as team EREG**
 > 
 > Showcase / Tutorial: [Watch on YouTube](https://www.youtube.com/watch?v=BrlwSAzDLOw)
 
