@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 472db4c0b4b1b2841b200cf9403fdb90, type: 3}
+  m_Name: Expo Presets Settings
+  m_EditorClassIdentifier: Assembly-CSharp::ExpoPresetData
+  Presets:
+  - name: Default
+    sunColor: {r: 1, g: 0.8258381, b: 0, a: 1}
+    floorTexture: {fileID: 2100000, guid: 1f421e21db0ed9c41a8518e3d732e1e7, type: 2}
+    ceilingTexture: {fileID: 2100000, guid: bddab897124a7964b87b33e1b18413a8, type: 2}
+    wallTexture: {fileID: 2100000, guid: bddab897124a7964b87b33e1b18413a8, type: 2}
+    ambientTrack: {fileID: 8300000, guid: bf3b2be61b3764a4bac9f6e600bdc957, type: 3}
+  - name: Medieval
+    sunColor: {r: 1, g: 0, b: 0, a: 1}
+    floorTexture: {fileID: 2100000, guid: f6c820c35a0bc844d99d5eb15ec0b422, type: 2}
+    ceilingTexture: {fileID: 2100000, guid: 97bc8fa67b7c9e04b9d3b58025d4519e, type: 2}
+    wallTexture: {fileID: 2100000, guid: 97bc8fa67b7c9e04b9d3b58025d4519e, type: 2}
+    ambientTrack: {fileID: 8300000, guid: 7eef1d2b61c9eb24e879091a445c44cf, type: 3}
+  - name: Scifi
+    sunColor: {r: 0, g: 1, b: 0.74262595, a: 1}
+    floorTexture: {fileID: 2100000, guid: bbbfb61d4559261489bdfbf54adc903b, type: 2}
+    ceilingTexture: {fileID: 2100000, guid: 371d5b2e9a51cf347aac6d193a316751, type: 2}
+    wallTexture: {fileID: 2100000, guid: 371d5b2e9a51cf347aac6d193a316751, type: 2}
+    ambientTrack: {fileID: 8300000, guid: 5607564de4b56dc478a211a46a7aafc8, type: 3}

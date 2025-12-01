@@ -1,0 +1,14 @@
+# Blender 4.1.1 MTL File: 'platform4.blend'
+# www.blender.org
+
+newmtl platform
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd textures/platform_DefaultMaterial_BaseColor.png
+map_Ns textures/platform_DefaultMaterial_Roughness.png
+map_refl textures/platform_DefaultMaterial_Metallic.png
+map_Ke textures/platform_DefaultMaterial_Emissive.png
+map_Bump -bm 1.000000 textures/platform_DefaultMaterial_Normal.png
