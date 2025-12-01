@@ -1,3 +1,5 @@
+> Made in 48 hours for [UniHack 2025](https://unihack.eu)
+
 # 🧩 openxzbt
 
 openxzbt is an open-source platform for creating and exploring interactive 3D expositions.
